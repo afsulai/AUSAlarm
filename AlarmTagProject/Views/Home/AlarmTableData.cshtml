@@ -1,0 +1,195 @@
+﻿@model List<AlarmTagProject.Models.sp_AlarmSearch_Result>
+@{ 
+   
+}
+<script>
+    $(document).ready(function () {
+        $("#TxtPageNumber").keypress(function (e) {
+            //if the letter is not digit then display error and don't type anything
+            if (e.keyCode == 13) {
+                var txtval = $("#TxtPageNumber").val();
+                if (txtval != "") {
+                    updateAlarmData(txtval);
+                }
+            }
+            else {
+                if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                    //display error message
+                    $("#errmsg").html("Digits Only").show().fadeOut("slow");
+                    return false;
+                }
+            }
+            var txtval = $("#TxtPageNumber").val();
+            var TotalPages = $('#hiddenInputTotalPagesCount').val();
+            if (parseInt(txtval) > parseInt(TotalPages))
+            {
+                alert('Please enter number less than ' + TotalPages);
+                $("#TxtPageNumber").val('');
+            }
+        });
+       
+        
+    });
+</script>
+<table  class="table table-hover table-bordered" style="width:875px;margin-bottom:0px !important">
+    <thead>
+        <tr style="background-color:#273663;color:white;">
+            <th style="width: 10px;"><input type="checkbox" value="All" id="checkAll" onclick="SelectAllCheckBoxes(this);" /></th>
+            <th  style="width: 120px;">Associated Tag Name</th>
+            <th  style="width: 70px;">Alarm Type</th>
+            <th  style="width: 43px;">Site</th>
+            <th  style="width: 77px;">Source</th>
+            <th style="width:145px;">Description</th>
+            <th style="width:195px;">Design Basis Comment</th>
+            <th style="width:100px;">Process Status</th>
+            <th style="width:75px;">Requester</th>
+            <th  style="width:50px;">Status</th>
+        </tr>
+    </thead>
+</table>
+<div style="height:500px;overflow-y:scroll;">
+
+    <table id="MasterDataTable" class="table table-hover" style="width:875px">
+
+        <tbody>
+            @if(Convert.ToInt32(ViewBag.TotalRecords)==0)
+        {
+        <tr><td colspan="10" style="text-align:center"><br /><br /><br /><br /><b>Records not found</b><br /><br /><br /><br /></td></tr>}
+        else{ // Binds data.
+        foreach (var m in Model)
+        {
+                    <tr id="@m.AlarmTagID">
+                        <td  style="width: 10px;word-break:break-all;">
+                        @if (@m.Status != null)
+                        {
+                            if (m.Status == "Booked In")
+                            { <input type="checkbox" id="@m.AlarmTagID" onclick="TagCheckedChange(this);" />}
+                            else
+                            {
+                                <input type="checkbox" id="@m.AlarmTagID" disabled="disabled"/>
+                            }
+                        }
+                        else
+                        {<input type="checkbox" id="@m.AlarmTagID"   disabled="disabled"/>}</td>
+                        <td  style="width: 120px;word-break:break-all;"><a href="#" onclick="LoadTagDetails('@m.Associated_Tagname','@m.Alarm_Type','@m.Site');">@m.Associated_Tagname</a></td>
+                        <td  style="width: 70px;word-break:break-all;">@m.Alarm_Type</td>
+                        <td  style="width: 43px;word-break:break-all;">@m.Site</td>
+                        <td  style="width: 77px;word-break:break-all;">@m.Source</td>
+                        <td  style="width:145px;word-break:break-all;">@m.Alarm_Text_for_Operator</td>
+                        <td  style="width:195px;word-break:break-all;">
+                            @if (m.Design_Basis_Comment != null)
+                {
+                    if (m.Design_Basis_Comment.Length > 50)
+                    { <span title="@m.Design_Basis_Comment">
+                        @m.Design_Basis_Comment.Substring(0, 50)
+                    </span><span>...</span>}
+                    else {<span title="@m.Design_Basis_Comment">
+                        @m.Design_Basis_Comment
+                    </span>}
+                }
+                        </td>
+                        <td  style="width:100px;word-break:break-all;">
+                            <span>@m.Status</span>@if (m.ChangeDate != null)
+                { <span>@m.ChangeDate.Value.ToString("dd/MM/yyyy")</span> }
+                        </td>
+                        <td  style="width:75px;word-break:break-all;">@m.Custodian</td>
+                        <td  style="width:50px;word-break:break-all;">@m.Development_Status</td>
+                    </tr>
+        }
+        }
+        </tbody>
+
+    </table>
+</div>
+    @if (Convert.ToInt32(ViewBag.TotalRecords) != 0)
+{
+        
+    <table class="table" style="width:875px">
+       
+            <tfoot >
+                <tr>
+
+                    <td colspan="3">Total Records: @ViewBag.TotalRecords</td>
+                  
+                    <td colspan="5">
+                        <ul class="pagination" style="margin: 0px !important;">
+                            @if (ViewBag.PageIndex>ViewBag.PageRange)
+                            {
+                            <li><a href="#" id="showFisrtPage" style="display:block;" onclick="ShowFirstPage();">|&laquo;&laquo;</a></li>
+                            <li><a href="#" id="showPrevious" style="display:block;" onclick="ShowPreviousTenPageNumbers();">&laquo;</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="#" id="showFisrtPage" style="display:none;" onclick="ShowFirstPage();">|&laquo;&laquo;</a></li>
+                                <li><a href="#" id="showPrevious" style="display:none;" onclick="ShowPreviousTenPageNumbers();">&laquo;</a></li>
+                            }
+                            @for (int item = 0; item < ViewBag.PageRange; item++)
+                            {
+                                var page = ViewBag.FisrtPage + item;
+                               
+                                if (page <= ViewBag.TotalPagesCount)
+                                {
+                                    if (ViewBag.PageIndex == page)
+                                    {
+                                <li id="@("lipage"+item)" style="display:block;"><a href="#" style="background-color:lightsalmon" onclick="GetDataForPage(this);" id="@("linkpage"+item)" >@page</a></li> }
+                                    else
+                                    {
+                                <li id="@("lipage"+item)" style="display:block;"><a href="#" onclick="GetDataForPage(this);" id="@("linkpage"+item)" >@page</a></li>}
+                                }
+                                else
+                                {
+                                    <li id="@("lipage"+item)" style="display:none;"><a href="#" style="background-color:lightsalmon" onclick="GetDataForPage(this);" id="@("linkpage"+item)" ></a></li>
+                                }
+                               
+
+
+
+                            }
+                            @if (ViewBag.TotalPagesCount >= ViewBag.lastpage)
+                            {
+                            <li><a href="#" id="showNext"  style="display:block;" onclick="ShowNextTenPageNumbers();">&raquo;</a></li>
+                            <li><a href="#" id="showLastPage"  style="display:block;" onclick="ShowLastPage();">&raquo;&raquo;|</a></li>
+                            }
+                        </ul>
+
+                    </td>
+
+
+
+                    <td> Page
+                        <input type="text" name="TxtPageNumber" id="TxtPageNumber" value="@ViewBag.PageIndex" onchange="updateAlarmData(this.value);" style="width:40px;" />&nbsp;<span id="errmsg"></span>
+                       /  @ViewBag.TotalPagesCount
+                        <input type="text" hidden="hidden" value="@ViewBag.PageIndex" id="hiddenInputPageIndex" />
+                        <input type="text" hidden="hidden" value="@ViewBag.PageRange" id="hiddenInputPageRange" />
+                        <input type="text" hidden="hidden" value="@ViewBag.FisrtPage" id="hiddenInputFisrtPage" />
+                        <input type="text" hidden="hidden" value="@ViewBag.lastpage" id="hiddenInputlastpage" />
+                        <input type="text" hidden="hidden" value="@ViewBag.TotalPagesCount" id="hiddenInputTotalPagesCount" />
+                        @*<input type="text" hidden="hidden" value="@ViewBag.PageIndexEnd" id="hiddenInputNoOfPagesEnd" />*@
+                    </td>
+                </tr>
+
+            </tfoot>
+        
+    </table>
+}
+
+<!-- Modal -->
+<div id="AlarmModal" class="modal fade" role="dialog" >
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content" style="background-color:#659DBD !important;color:white;font-size:12px;">
+            <div class="modal-header" style="background-color:#00008B">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="AlarmHeader"></h4>
+            </div>
+            <div class="modal-body">
+               <div id="AlarmBody"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

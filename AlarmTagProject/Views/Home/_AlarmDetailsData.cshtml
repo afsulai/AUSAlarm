@@ -1,0 +1,682 @@
+﻿@model AlarmTagProject.Models.sp_AlarmTagDetails_Result
+
+
+<script type="text/javascript">
+   
+    $(document).ready(function () {
+
+            //If Alarm priority is null , then select empty value on the page load.
+            var alarmPriority = $("#Alarm_Priority").val();
+            if (alarmPriority != "") {
+                $("#ddlAlarmPrority").find("option:contains(" + alarmPriority + ")").attr('selected', 'selected');
+            }
+            else {
+                $('#ddlAlarmPrority').val('');
+            }   
+
+            //If data is invalid, i.e., not present in  master data , add it to master data dropdowns and select it on page load.
+
+            var System = $("#SystemHidden").val();
+            var optionSystemExists = ($('#System option[value="' + System + '"]').length > 0);
+            
+            if (!optionSystemExists) {
+                $('#System').append("<option value='" + System + "'>" + System + "</option>");
+                $("#System").find("option:contains(" + System + ")").attr('selected', 'selected');
+            }
+
+            var Source = $("#SourceHidden").val();            
+            var optionSourceExists = ($('#Source option[value="' + Source + '"]').length > 0);
+
+            if (!optionSourceExists) {
+                $('#Source').append("<option value='" + Source + "'>" + Source + "</option>");
+                $("#Source").find("option:contains(" + Source + ")").attr('selected', 'selected');
+            }
+
+            var Hard_wired_Colour = $("#Hard_wired_ColourHidden").val();
+            var optionHard_wired_ColourExists = ($('#Hard_wired_Colour option[value="' + Hard_wired_Colour + '"]').length > 0);
+
+            if (!optionHard_wired_ColourExists) {
+                $('#Hard_wired_Colour').append("<option value='" + Hard_wired_Colour + "'>" + Hard_wired_Colour + "</option>");
+                $("#Hard_wired_Colour").find("option:contains(" + Hard_wired_Colour + ")").attr('selected', 'selected');
+            }
+
+            var Hard_wired___IAS_Alarm_Type = $("#Hard_wired___IAS_Alarm_TypeHidden").val();
+            var optionHard_wired___IAS_Alarm_TypeExists = ($('#Hard_wired___IAS_Alarm_Type option[value="' + Hard_wired___IAS_Alarm_Type + '"]').length > 0);
+
+            if (!optionHard_wired___IAS_Alarm_TypeExists) {
+                $('#Hard_wired___IAS_Alarm_Type').append("<option value='" + Hard_wired___IAS_Alarm_Type + "'>" + Hard_wired___IAS_Alarm_Type + "</option>");
+                $("#Hard_wired___IAS_Alarm_Type").find("option:contains(" + Hard_wired___IAS_Alarm_Type + ")").attr('selected', 'selected');
+            }
+
+            var IAS_Box = $("#IAS_BoxHidden").val();
+            var optionIAS_BoxExists = ($('#IAS_Box option[value="' + IAS_Box + '"]').length > 0);
+
+            if (!optionIAS_BoxExists) {
+                $('#IAS_Box').append("<option value='" + IAS_Box + "'>" + IAS_Box + "</option>");
+                $("#IAS_Box").find("option:contains(" + IAS_Box + ")").attr('selected', 'selected');
+            }
+
+            var IAS_Slot = $("#IAS_SlotHidden").val();
+            var optionIAS_SlotExists = ($('#IAS_Slot option[value="' + IAS_Slot + '"]').length > 0);
+
+            if (!optionIAS_SlotExists) {
+                $('#IAS_Slot').append("<option value='" + IAS_Slot + "'>" + IAS_Slot + "</option>");
+                $("#IAS_Slot").find("option:contains(" + IAS_Slot + ")").attr('selected', 'selected');
+            }
+
+            var IAS_Channel = $("#IAS_ChannelHidden").val();
+            var optionIAS_ChannelExists = ($('#IAS_Channel option[value="' + IAS_Channel + '"]').length > 0);
+
+            if (!optionIAS_ChannelExists) {
+                $('#IAS_Channel').append("<option value='" + IAS_Channel + "'>" + IAS_Channel + "</option>");
+                $("#IAS_Channel").find("option:contains(" + IAS_Channel + ")").attr('selected', 'selected');
+            }
+
+            var Development_Status = $("#Development_StatusHidden").val();
+            var optionDevelopment_StatustExists = ($('#Development_Status option[value="' + Development_Status + '"]').length > 0);
+
+            if (!optionDevelopment_StatustExists) {
+                $('#Development_Status').append("<option value='" + Development_Status + "'>" + Development_Status + "</option>");
+                $("#Development_Status").find("option:contains(" + Development_Status + ")").attr('selected', 'selected');
+            }
+
+    });
+
+    function checkSubmit()
+    {
+        var PFCADate = $("#Project_or_FCA_Revision_Date").val();
+        var changeDate = $("#ChangeDate").val();
+        var revisionDate = $("#Status_Revision_Date").val();
+        if (PFCADate == "" && changeDate == "" && revisionDate == "")
+        { return true; }
+
+        var returnVal = false;
+        var returnValPS = false;
+        var returnValTS = false;
+        returnVal = checkPFDate();
+        
+        returnValPS = checkProcessStatusDate();
+
+        returnValTS = checkTagStatusDate();
+        
+       
+        if (returnVal && returnValPS && returnValTS)
+        {
+            
+           
+            return true;
+        }
+        else
+            return false;
+    }
+
+    function checkPFDate() {
+        var reg = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
+        var PFDate = $("#Project_or_FCA_Revision_Date").val();
+        
+        if (PFDate != "") {
+            if (reg.test(PFDate)) {
+                return true;
+            } else {
+                alert('Please enter valid date in dd/mm/yyyy format for Project or FCA_Revision Date');
+                return false;
+            }
+        }
+        else
+        {
+            return true;
+        }
+        
+    }
+
+
+    function checkProcessStatusDate() {
+        var reg = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
+        
+        var ChangeDate = $("#ChangeDate").val();
+        
+        if (ChangeDate != "") {
+            if (reg.test(ChangeDate)) {
+                return true;
+            } else {
+                alert('Please enter valid date in dd/mm/yyyy format for Process status date.');
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+    }
+
+    function checkTagStatusDate() {
+        var reg = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
+       
+        var RevisionDate = $("#Status_Revision_Date").val();
+
+        if (RevisionDate != "") {
+            if (reg.test(RevisionDate)) {
+                return true;
+            } else {
+                alert('Please enter valid date in dd/mm/yyyy format for Tag status date.');
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+        
+    }
+
+    function OnSuccess(response) {
+        alert('Alarm tag details updated successfully.');
+    }
+
+    function OnFailure(response) {
+        alert("Error occured while updating the alarm tag details. Please retry.");
+    }
+</script>
+
+<style>
+    fieldset {
+        border: 1px solid #dddddd !important;
+        border-radius: 1px !important;
+    }
+
+        fieldset legend {
+            padding: 1px 1px !important;
+            border-radius: 1px !important;
+            box-shadow: 0 0 0 1px #ddd;
+            margin-left: 20px !important;
+            color: yellow;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+    .TDChange {
+        padding: 0px !important;
+        vertical-align: middle
+    }
+
+    h4 {
+        font-size: 12px !important;
+    }
+
+    .btnHighlight {
+        background-color: lightpink;
+    }
+
+  
+</style>
+
+
+@using (Ajax.BeginForm("AlarmTagDataUpdate", "Home",new AjaxOptions{HttpMethod = "POST",OnSuccess = "OnSuccess",OnFailure = "OnFailure"}))
+{
+<div>
+     <table class="table table-bordered" style="margin-bottom:0px;text-align:right !important;background-color:#659DBD !important">
+ 
+     
+            <tr > 
+                <td class="TDChange"><h4 style="line-height:0.5 !important">Alarm Tag</h4></td>
+                <td class="TDChange" style="width:500px;text-align:left !important;"> 
+                    <input type="text" id="AlarmTagID" name="AlarmTagID" value="@Model.AlarmTagID" hidden="hidden"/>                
+                <input type="text" id="Associated_Tagname"  name="Associated_Tagname"  value="@Model.Associated_Tagname" disabled="disabled"/></td>
+                @Html.HiddenFor(m => m.Associated_Tagname)
+                <td rowspan="5">
+                <fieldset>
+                    <legend style="width:150px;color:#FFFF00 !important">Waiting on action form</legend>
+                    <table class="table table-bordered" style="background-color:#659DBD;">
+                    <tr>
+                         <td class="TDChange"><h4 style="line-height:0.5 !important">Project/FCA Number</h4></td>
+                        <td class="TDChange" style="text-align:left !important;">
+                                <input type="text" id="Project_or_FCA_Number"  name="Project_or_FCA_Number"   value="@Model.Project_or_FCA_Number" />
+                        </td>
+                        <td class="TDChange" style="text-align:left !important;">@if (Model.Project_or_FCA_Revision_Date != null)
+                        {
+                         <input type="text" style="width:100px" id="Project_or_FCA_Revision_Date"  name="Project_or_FCA_Revision_Date"  
+                                value='@Model.Project_or_FCA_Revision_Date.Value.ToString("dd/MM/yyyy")'/>
+
+                        }
+                        else
+                        { <input type="text" style="width:100px" id="Project_or_FCA_Revision_Date" name="Project_or_FCA_Revision_Date"/> }
+                        </td>
+                    </tr>
+
+<tr><td class="TDChange"><h4 style="line-height:0.5 !important">Custodian</h4></td><td class="TDChange" style="text-align:left !important;">
+    <input type="text"  id="Custodian"  name="Custodian"  value="@Model.Custodian" /></td></tr>
+
+</table>
+
+</fieldset></td>
+
+</tr>
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important">Type</h4></td>
+         <td class="TDChange" style="text-align:left !important;">
+    <select disabled="disabled" id="Alarm_Type"  name="Alarm_Type"><option>@Model.Alarm_Type</option></select></td>
+    @Html.HiddenFor(m => m.Alarm_Type)
+</tr>
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important">Site</h4></td>
+         <td class="TDChange" style="text-align:left !important;">
+        <select disabled="disabled" id="Site"  name="Site"><option>@Model.Site</option></select></td>
+        @Html.HiddenFor(m => m.Site)
+</tr>
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important">System</h4></td>
+    <td class="TDChange" style="text-align:left !important;">
+        @Html.DropDownListFor(m => m.System, new SelectList((System.Collections.IEnumerable)ViewData["SystemList"], "Value", "Value"))        
+        <input type="hidden" id="SystemHidden" name="SystemHidden" value="@Model.System"/>
+     </td>
+</tr>
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important">Source</h4></td> 
+    <td class="TDChange" style="text-align:left !important;">    
+        @Html.DropDownListFor(m => m.Source, new SelectList((System.Collections.IEnumerable)ViewData["SourceList"], "Value", "Value"))        
+        <input type="hidden" id="SourceHidden" name="SourceHidden" value="@Model.Source" />
+    </td>
+
+</tr>
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important">Alarm Group</h4></td>
+
+<td class="TDChange" style="text-align:left !important;">
+    <input type="text" id="Group"  name="Group" value="@Model.Group" /></td>
+
+<td rowspan="8">
+
+<table class="table table-bordered" style="background-color:#659DBD;">
+
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Process Status Old</h4></td>
+                            <td class="TDChange" style="text-align:left !important;">
+                                <input type="text" id="Status_Old" name="Status_Old" value="@Model.Status_Old" disabled="disabled" />                                
+                            </td>                            
+                            
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Process Status</h4></td>
+                            <td class="TDChange" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.Status, new SelectList((System.Collections.IEnumerable)ViewData["ProcessStatusList"], "Value", "Value"))                                
+                            </td>
+                            <td style="text-align:left !important;">
+                            @if (Model.ChangeDate != null)
+                            { 
+                                <input type="text" style="width:100px" id="ChangeDate"  name="ChangeDate"  value='@Model.ChangeDate.Value.ToString("dd/MM/yyyy")' />
+                                
+                            }
+                            else
+                            { <input type="text" style="width:100px" id="ChangeDate"  name="ChangeDate" value="" />}
+                              
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Hard-wired Colour</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.Hard_wired_Colour, new SelectList((System.Collections.IEnumerable)ViewData["HwColorList"], "Value", "Value"))
+                                <input type="hidden" id="Hard_wired_ColourHidden" name="Hard_wired_ColourHidden" value="@Model.Hard_wired_Colour" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Hard wired Location</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            <input type="text" id="Hard_wired_Location"  name="Hard_wired_Location"  value="@Model.Hard_wired_Location" />                            
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Affiliated Tag</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            <input type="text" value="@Model.Affiliated_Tag" id="Affiliated_Tag"  name="Affiliated_Tag" />                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Hard-wired / IAS Alarm Type</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.Hard_wired___IAS_Alarm_Type, new SelectList((System.Collections.IEnumerable)ViewData["HwIasList"], "Value", "Value"))
+                                <input type="hidden" id="Hard_wired___IAS_Alarm_TypeHidden" name="Hard_wired___IAS_Alarm_TypeHidden" value="@Model.Hard_wired___IAS_Alarm_Type" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">IAS Box</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.IAS_Box, new SelectList((System.Collections.IEnumerable)ViewData["IasBoxList"], "Value", "Value"))
+                                <input type="hidden" id="IAS_BoxHidden" name="IAS_BoxHidden" value="@Model.IAS_Box" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">IAS Slot</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.IAS_Slot, new SelectList((System.Collections.IEnumerable)ViewData["IasSlotList"], "Value", "Value"))
+                                <input type="hidden" id="IAS_SlotHidden" name="IAS_SlotHidden" value="@Model.IAS_Slot" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">IAS Channel</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.IAS_Channel, new SelectList((System.Collections.IEnumerable)ViewData["IasChannelList"], "Value", "Value"))  
+                                <input type="hidden" id="IAS_ChannelHidden" name="IAS_ChannelHidden" value="@Model.IAS_Channel" />
+                            </td>
+                        </tr>
+                        @*<tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important;color:#FFFF00 !important">Reviewed</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @if (Model.Review != null)
+                            {
+                                if (Model.Review.ToLower() == "yes")
+                                { <input type="checkbox" checked="checked"  readonly="readonly"/> }
+                                else
+                                {<input type="checkbox"  readonly="readonly" /> }
+                            }
+                            else
+                            { <input type="checkbox"  readonly="readonly" />}</td>
+
+</tr>*@
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important;color:#FFFF00 !important">By</h4></td>
+
+<td class="TDChange" style="text-align:left !important;">
+    <input type="text" id="Review_team"  name="Review_team" value="@Model.Review_team"  />
+</td>
+    <td class="TDChange" style="text-align:left !important;">
+        @if (Model.Review_Date != null)
+        {
+            <input type="text" style="width:80px" id="Review_Date"  name="Review_Date" value='@Model.Review_Date'  />
+        }
+        else
+        {
+            <input type="text" style="width:80px" id="Review_Date" name="Review_Date" value="" />
+        }
+    </td>
+
+</tr>
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important;color:#FFFF00 !important">Tag Status</h4></td>
+
+    <td class="TDChange" style="text-align:left !important;">
+    @Html.DropDownListFor(m => m.Development_Status, new SelectList((System.Collections.IEnumerable)ViewData["TagStatusList"], "Value", "Value"))
+        <input type="hidden" id="Development_StatusHidden" name="Development_StatusHidden" value="@Model.Development_Status" />
+    </td>
+
+<td class="TDChange" style="text-align:left !important;">@if (Model.Status_Revision_Date != null)
+{ <input type="text" style="width:100px" id="Status_Revision_Date"  name="Status_Revision_Date" value='@Model.Status_Revision_Date.Value.ToString("dd/MM/yyyy")'  /> }
+else
+{
+    <input type="text" style="width:100px" id="Status_Revision_Date" name="Status_Revision_Date" value="" />
+}
+    </td>
+
+</tr>
+
+</table>
+
+<table  class="table-bordered" style="width:100%;background-color:#659DBD !important">
+                        <tr><td>
+                                <fieldset >
+                                    <legend style="width:150px;background-color:darkmagenta;">Modified</legend>
+                                    <table class="table-bordered" style="width:100%;background-color:#659DBD !important">
+                                        <tr>
+                                            <td class="TDChange" style="text-align:left !important;">
+                                                <input type="text" id="UserModified"  name="UserModified"  value="@Model.UserModified" />
+                                            </td>
+                                            <td class="TDChange" style="text-align:left !important;">
+                                                @if (Model.DateModified != null)
+                                                {
+                                                    <input type="text" id="DateModified"  name="DateModified" disabled="disabled" value='@Model.DateModified.Value.ToString("dd/MM/yyyy")' />
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" id="DateModified" name="DateModified" disabled="disabled" value='' />
+                                                }
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </fieldset>
+                            </td></tr>
+                    </table>
+
+                </td>
+            </tr>
+            <tr>
+                <td class="TDChange"><h4 style="line-height:0.5 !important">Description</h4></td>
+                <td class="TDChange" style="text-align:left !important;">
+                    <input style="width:300px;max-width:300px !important"  maxlength="50" type="text" id="Alarm_Text_for_Operator"  name="Alarm_Text_for_Operator" value="@Model.Alarm_Text_for_Operator" />
+              </td>
+
+
+            </tr>
+            <tr>
+                <td class="TDChange"><h4 style="line-height:0.5 !important">Alarm Settings <span style="color:blue">-Units</span></h4></td>
+               
+                <td class="TDChange">
+                    <table width="100%" style="background-color:#659DBD !important">
+                    <tr>
+                        <td style="border-top:0px !important;border-right:1px solid #dddddd !important;padding:0px !important;text-align:left !important;">
+                            <input type="text" id="AlarmSetting_Units"  name="AlarmSetting_Units" value="@Model.AlarmSetting_Units" />
+                        </td>
+                        <td style="padding:0px !important;border-top:0px !important;border-right:1px solid #dddddd !important;">
+                        <h4 style="line-height:0.5 !important"><span style="color:blue">-Status</span></h4>
+                        </td>
+                        <td style="padding:0px !important;border-top:0px !important;border-right:1px solid #dddddd !important;text-align:left !important;">
+                        <input type="text" id="AlarmSetting_Status"  name="AlarmSetting_Status" value="@Model.AlarmSetting_Status" />
+                        </td>
+                    </tr>
+                    </table>
+                </td>
+
+        </tr>
+        <tr>
+            <td class="TDChange"><h4 style="line-height:0.5 !important">Defined Response</h4></td>
+            <td class="TDChange" style="text-align:left !important;">
+                <input type="text" id="Defined_Response"  name="Defined_Response"  maxlength="64"  value="@Model.Defined_Response" style="width:500px;max-width:500px !important" />
+        </td>
+
+
+    </tr>
+    <tr>
+        <td style="padding:0px !important;"  ><h4 style="line-height:0.5 !important">Alarm Priority</h4></td>
+        <td class="TDChange" style="text-align:left !important;">
+            @Html.DropDownList("ddlAlarmPrority", new SelectList((System.Collections.IEnumerable)ViewData["AlarmProrityList"], "Value", "Value"), new { @disabled = "disabled" })
+            @Html.HiddenFor(m => m.Alarm_Priority)
+        </td>
+       
+    </tr>
+    <tr>
+        <td class="TDChange"></td>
+        <td class="TDChange">
+           <table class="table-bordered" style="border-style:groove;background-color:#659DBD !important">
+               <tr><td colspan="5" style="padding:0px;">Consequences of not responding to Alarm</td></tr>
+               <tr><td></td>
+               <td>
+                   @Html.HiddenFor(m => m.Urgency_of_Response)
+                   @Html.HiddenFor(m => m.Level_of_Consequences)
+               </td>
+               <td>SERIOUS</td><td>MODERATE</td><td>MINOR</td></tr>
+               <tr>
+               <td rowspan="3" style="font-size:10px !important" >U<br/>R<br />G<br />E<br />N<br />C<br />Y</td>
+               <td>&#60;15 min</td>
+               @if (Model.Urgency_of_Response == 1 && Model.Level_of_Consequences == 1)
+               {
+                  <td>                      
+                      <input  class="btnHighlight" type="button" id="matrix11" value="PRTY1" onclick="SetUrgencyConsequence(matrix11,1,1);" />
+                   </td>
+               }
+               else
+               {
+                    <td >
+                        <input type="button" id="matrix11" value="PRTY1" onclick="SetUrgencyConsequence(matrix11,1,1);" />
+                    </td>
+               }
+                   @if (Model.Urgency_of_Response == 1 && Model.Level_of_Consequences == 2)
+                   {
+                        <td>
+                            
+                            <input  class="btnHighlight" type="button" id="matrix12" value="PRTY2" onclick="SetUrgencyConsequence(matrix12,1,2);" />
+                        </td>
+                   }
+                   else
+                   {
+                       <td>
+                           <input type="button" id="matrix12" value="PRTY2" onclick="SetUrgencyConsequence(matrix12,1,2);" />
+                       </td>}
+                   @if (Model.Urgency_of_Response == 1 && Model.Level_of_Consequences == 3)
+                   {
+                            <td>
+                                <input class="btnHighlight" type="button" id="matrix13" value="PRTY2" onclick="SetUrgencyConsequence(matrix13,1,3);" />
+                            </td> }
+                   else
+                   {
+                       <td>
+                           <input type="button" id="matrix13" value="PRTY2" onclick="SetUrgencyConsequence(matrix13,1,3);" />
+                       </td>
+                   }</tr>
+               <tr>
+                   <td>15-45 min</td>
+                   @if (Model.Urgency_of_Response == 2 && Model.Level_of_Consequences == 1)
+                   {
+                        <td >
+                            <input  class="btnHighlight" type="button" id="matrix21" value="PRTY1" onclick="SetUrgencyConsequence(matrix21,2,1);" />
+                        </td>
+                   }
+                   else
+                   {
+                       <td>
+                           <input type="button" id="matrix21" value="PRTY1" onclick="SetUrgencyConsequence(matrix21,2,1);" />
+                        </td>
+                   }
+                   @if (Model.Urgency_of_Response == 2 && Model.Level_of_Consequences == 2)
+                   {
+                       <td >
+                           <input class="btnHighlight" type="button" id="matrix22" value="PRTY2" onclick="SetUrgencyConsequence(matrix22,2,2);" />
+                       </td>
+                   }
+                   else
+                   {
+                        <td>
+                            <input type="button" id="matrix22" value="PRTY2" onclick="SetUrgencyConsequence(matrix22,2,2);" />
+                        </td>}
+                   @if (Model.Urgency_of_Response == 2 && Model.Level_of_Consequences == 3)
+                   {
+                       <td>
+                           <input  class="btnHighlight" type="button" id="matrix23" value="PRTY3" onclick="SetUrgencyConsequence(matrix23,2,3);" />
+                        </td> }
+                   else
+                   {
+                        <td>
+                            <input type="button" id="matrix23" value="PRTY3" onclick="SetUrgencyConsequence(matrix23,2,3);" />
+                        </td>}
+               </tr>
+               <tr>
+                   <td>&#62;45 min</td>
+                   @if (Model.Urgency_of_Response == 3 && Model.Level_of_Consequences == 1)
+                   {
+                    <td>
+                        <input  class="btnHighlight" type="button" id="matrix31" value="PRTY2" onclick="SetUrgencyConsequence(matrix31,3,1);" />
+                    </td>}
+                   else
+                   {
+                       <td>
+                          <input type="button" id="matrix31" value="PRTY2" onclick="SetUrgencyConsequence(matrix31,3,1);" />
+                        </td>}
+                   @if (Model.Urgency_of_Response == 3 && Model.Level_of_Consequences == 2)
+                   {
+                       <td>
+                           <input  class="btnHighlight" type="button" id="matrix32" value="PRTY2" onclick="SetUrgencyConsequence(matrix32,3,2);" />
+                       </td>
+                   }
+                   else
+                   {
+                        <td>
+                            <input type="button" id="matrix32" value="PRTY2" onclick="SetUrgencyConsequence(matrix32,3,2);" />
+                        </td>
+                   }
+                   @if (Model.Urgency_of_Response == 3 && Model.Level_of_Consequences == 3)
+                   {
+                       <td>
+                           <input  class="btnHighlight"  type="button" id="matrix33" value="PRTY3" onclick="SetUrgencyConsequence(matrix33,3,3);" />
+                        </td> }
+                   else
+                   {
+                    <td>
+                        <input type="button" id="matrix33" value="PRTY3" onclick="SetUrgencyConsequence(matrix33,3,3);" />
+                    </td>
+                   }
+               </tr>
+               <tr><td></td><td ></td><td colspan="3" style="padding:0px !important">
+                   <table style="border-style:groove;border-width:thick;border-width:0px;background-color:#659DBD !important"><tr>
+                   @if (Model.Urgency_of_Response == 5 && Model.Level_of_Consequences == 5)
+                   {
+                    <td>
+                        <input class="btnHighlight" type="button" id="matrix55" value="Status" onclick="SetUrgencyConsequence(matrix55,5,5);" />  
+                    </td>
+                   }
+                   else
+                   {
+                       <td style = "border-right-color: rgb(221, 221, 221); border-right-style: solid;" >
+                           <input type="button" id="matrix55" value="Status" onclick="SetUrgencyConsequence(matrix55,5,5);" />  
+                        </td >
+                   }
+                   @if (Model.Urgency_of_Response == 4 && Model.Level_of_Consequences == 4)
+                   {
+                       <td>
+                           <input class="btnHighlight" type="button" id="matrix44" value="Log" onclick="SetUrgencyConsequence(matrix44,4,4);" />  
+                        </td>
+                   }
+                   else
+                   {
+                    <td>
+                        <input type="button" id="matrix44" value="Log" onclick="SetUrgencyConsequence(matrix44,4,4);" />  
+                    </td>
+                   }
+                </tr></table></td></tr>
+            </table>
+        </td>
+       
+    </tr>
+    <tr>
+        <td class="TDChange"><h4 style="line-height:0.5 !important">Design Basis Comment</h4></td>
+        <td class="TDChange" style="text-align:left">
+            @*<div style="height:120px;width:500px;border:1px solid #ccc;background-color:#fff;color:black;">*@
+                @*<input  style="height:100%;width:100%;overflow:auto;"  maxlength="2000" id="Design_Basis_Comment" name="Design_Basis_Comment" value="@Model.Design_Basis_Comment" />*@
+                @Html.TextAreaFor(m => m.Design_Basis_Comment,10,150,null)
+            @*@Html.TextAreaFor(m => m.Design_Basis_Comment, new { @class = "areaWidth" })*@
+            @*</div>*@
+           
+        </td>
+       
+    </tr>
+    <tr>
+        <td class="TDChange"><h4 style="line-height:0.5 !important">Design Document Ref</h4></td>
+        <td class="TDChange" style="text-align:left !important;">
+            <input style="width:300px"  id="Design_Document_Reference"  name="Design_Document_Reference" value="@Model.Design_Document_Reference"/>
+        </td>
+      
+    </tr>
+      
+
+    </table>
+    <table class="table table-bordered" style="margin-bottom:0px;text-align:right !important;background-color:#659DBD !important">
+        <tfoot>
+            <tr>
+                <td  class="col-md-offset-2 col-md-2">
+                    <input type="submit" value="Update" class="btn btn-default" onclick="return checkSubmit();"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    
+                    <input type="button" value="Permanent Delete" class="btn btn-default" onclick="DeleteAlarmTag();" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+  }

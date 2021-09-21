@@ -1,0 +1,1040 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MASTERALARMModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tbl_AlarmMasterEventAuditLog">
+          <Key>
+            <PropertyRef Name="Eventid" />
+          </Key>
+          <Property Name="Eventid" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="100" />
+          <Property Name="Action" Type="varchar(max)" />
+          <Property Name="Eventdate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_AlarmMasterExceptionLogging">
+          <Key>
+            <PropertyRef Name="Logid" />
+          </Key>
+          <Property Name="Logid" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ExceptionMsg" Type="text" />
+          <Property Name="ExceptionType" Type="text" />
+          <Property Name="ExceptionSource" Type="nvarchar(max)" />
+          <Property Name="ExceptionURL" Type="varchar" MaxLength="500" />
+          <Property Name="Logdate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tblAlarmFields">
+          <Key>
+            <PropertyRef Name="FieldID" />
+          </Key>
+          <Property Name="FieldID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Field Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblAlarmFieldsData">
+          <Key>
+            <PropertyRef Name="FieldDataID" />
+          </Key>
+          <Property Name="FieldDataID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Value" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FieldID" Type="int" Nullable="false" />
+          <Property Name="Retain" Type="int" />
+        </EntityType>
+        <EntityType Name="tblAlarmsMaster">
+          <Key>
+            <PropertyRef Name="AlarmTagID" />
+          </Key>
+          <Property Name="AlarmTagID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Associated Tagname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Alarm Type" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="Site" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="System" Type="nvarchar" MaxLength="15" />
+          <Property Name="Source" Type="nvarchar" MaxLength="15" />
+          <Property Name="Group" Type="nvarchar" MaxLength="15" />
+          <Property Name="Alarm Text for Operator" Type="nvarchar" MaxLength="50" />
+          <Property Name="Alarm Setting" Type="nvarchar" MaxLength="15" />
+          <Property Name="AlarmSetting_Units" Type="nvarchar" MaxLength="15" />
+          <Property Name="AlarmSetting_Status" Type="nvarchar" MaxLength="15" />
+          <Property Name="Alarm Priority" Type="nvarchar" MaxLength="50" />
+          <Property Name="DCS Priority" Type="nvarchar" MaxLength="50" />
+          <Property Name="Design Document Reference" Type="nvarchar" MaxLength="50" />
+          <Property Name="Alarm Comment" Type="nvarchar" MaxLength="64" />
+          <Property Name="Level of Consequences" Type="int" />
+          <Property Name="Urgency of Response" Type="int" />
+          <Property Name="Defined Response" Type="nvarchar" MaxLength="64" />
+          <Property Name="Design Basis Comment" Type="nvarchar(max)" />
+          <Property Name="Project or FCA Number" Type="nvarchar" MaxLength="20" />
+          <Property Name="Project or FCA Revision Date" Type="datetime" />
+          <Property Name="Custodian" Type="nvarchar" MaxLength="25" />
+          <Property Name="Status" Type="nvarchar" MaxLength="20" />
+          <Property Name="ChangeDate" Type="datetime" />
+          <Property Name="Hard-wired Colour" Type="nvarchar" MaxLength="20" />
+          <Property Name="Hard-wired Location" Type="nvarchar" MaxLength="25" />
+          <Property Name="Affiliated Tag" Type="nvarchar" MaxLength="20" />
+          <Property Name="Hard-wired / IAS Alarm Type" Type="nvarchar" MaxLength="20" />
+          <Property Name="IAS Box" Type="nvarchar" MaxLength="20" />
+          <Property Name="IAS Slot" Type="nvarchar" MaxLength="20" />
+          <Property Name="IAS Channel" Type="nvarchar" MaxLength="20" />
+          <Property Name="Review" Type="nvarchar" MaxLength="50" />
+          <Property Name="Review team" Type="nvarchar" MaxLength="20" />
+          <Property Name="Review Date" Type="nvarchar" MaxLength="50" />
+          <Property Name="Development Status" Type="nvarchar" MaxLength="10" />
+          <Property Name="Status Revision Date" Type="datetime" />
+          <Property Name="DateModified" Type="datetime" />
+          <Property Name="UserModified" Type="nvarchar" MaxLength="50" />
+          <Property Name="AlarmSuppressionDetail" Type="nvarchar(max)" />
+          <Property Name="Status_Old" Type="nvarchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="tblAlarmsMasterBookinImport">
+          <Key>
+            <PropertyRef Name="ImportID" />
+          </Key>
+          <Property Name="ImportID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AlarmTagID" Type="int" />
+          <Property Name="Associated Tagname" Type="nvarchar" MaxLength="50" />
+          <Property Name="Alarm Type" Type="nvarchar" MaxLength="15" />
+          <Property Name="Site" Type="nvarchar" MaxLength="15" />
+          <Property Name="System" Type="nvarchar" MaxLength="15" />
+          <Property Name="Source" Type="nvarchar" MaxLength="15" />
+          <Property Name="Group" Type="nvarchar" MaxLength="15" />
+          <Property Name="Alarm Text for Operator" Type="nvarchar" MaxLength="50" />
+          <Property Name="Alarm Setting" Type="nvarchar" MaxLength="15" />
+          <Property Name="AlarmSetting_Units" Type="nvarchar" MaxLength="15" />
+          <Property Name="AlarmSetting_Status" Type="nvarchar" MaxLength="15" />
+          <Property Name="Alarm Priority" Type="nvarchar" MaxLength="50" />
+          <Property Name="DCS Priority" Type="nvarchar" MaxLength="50" />
+          <Property Name="Design Document Reference" Type="nvarchar" MaxLength="50" />
+          <Property Name="Alarm Comment" Type="nvarchar" MaxLength="64" />
+          <Property Name="Level of Consequences" Type="int" />
+          <Property Name="Urgency of Response" Type="int" />
+          <Property Name="Defined Response" Type="nvarchar" MaxLength="64" />
+          <Property Name="Design Basis Comment" Type="text" />
+          <Property Name="Project or FCA Number" Type="nvarchar" MaxLength="20" />
+          <Property Name="Project or FCA Revision Date" Type="datetime" />
+          <Property Name="Custodian" Type="nvarchar" MaxLength="25" />
+          <Property Name="Status" Type="nvarchar" MaxLength="20" />
+          <Property Name="ChangeDate" Type="datetime" />
+          <Property Name="Hard-wired Colour" Type="nvarchar" MaxLength="20" />
+          <Property Name="Hard-wired Location" Type="nvarchar" MaxLength="25" />
+          <Property Name="Affiliated Tag" Type="nvarchar" MaxLength="20" />
+          <Property Name="Hard-wired / IAS Alarm Type" Type="nvarchar" MaxLength="20" />
+          <Property Name="IAS Box" Type="nvarchar" MaxLength="20" />
+          <Property Name="IAS Slot" Type="nvarchar" MaxLength="20" />
+          <Property Name="IAS Channel" Type="nvarchar" MaxLength="20" />
+          <Property Name="Review" Type="nvarchar" MaxLength="50" />
+          <Property Name="Review team" Type="nvarchar" MaxLength="20" />
+          <Property Name="Review Date" Type="nvarchar" MaxLength="50" />
+          <Property Name="Development Status" Type="nvarchar" MaxLength="10" />
+          <Property Name="Status Revision Date" Type="datetime" />
+          <Property Name="DateModified" Type="datetime" />
+          <Property Name="UserModified" Type="nvarchar" MaxLength="50" />
+          <Property Name="AlarmSuppressionDetail" Type="nvarchar(max)" />
+          <Property Name="ImportedBy" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UpdateFlag" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ImportDate" Type="datetime" />
+          <Property Name="Status_Old" Type="nvarchar" MaxLength="40" />
+        </EntityType>
+        <Association Name="FK_tblAlarmFields_tblAlarmFieldsData">
+          <End Role="tblAlarmFields" Type="Self.tblAlarmFields" Multiplicity="1" />
+          <End Role="tblAlarmFieldsData" Type="Self.tblAlarmFieldsData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblAlarmFields">
+              <PropertyRef Name="FieldID" />
+            </Principal>
+            <Dependent Role="tblAlarmFieldsData">
+              <PropertyRef Name="FieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="masterAlarmDB_sp_BookinAlarmTags" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="masterAlarmDB_sp_BookinCheckData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="IsTagBookedIn" Type="varchar" Mode="InOut" />
+        </Function>
+        <Function Name="masterAlarmDB_sp_BookinLoadOfflineData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="masterAlarmDB_sp_BookinReset" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="masterAlarmDB_sp_BookinShowData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="RowsPerPage" Type="int" Mode="In" />
+          <Parameter Name="PageIndex" Type="int" Mode="In" />
+          <Parameter Name="Username" Type="varchar" Mode="In" />
+          <Parameter Name="TotalPages" Type="int" Mode="InOut" />
+          <Parameter Name="TotalRows" Type="int" Mode="InOut" />
+          <Parameter Name="DataType" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="masterAlarmDB_sp_ExportReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SearchTerm" Type="varchar" Mode="In" />
+          <Parameter Name="Site" Type="varchar" Mode="In" />
+          <Parameter Name="Status" Type="varchar" Mode="In" />
+          <Parameter Name="TagStatus" Type="varchar" Mode="In" />
+          <Parameter Name="Criteria" Type="int" Mode="In" />
+        </Function>
+        <Function Name="masterAlarmDB_sp_GetAllTagStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_AlarmSearch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SearchTerm" Type="varchar" Mode="In" />
+          <Parameter Name="Site" Type="varchar" Mode="In" />
+          <Parameter Name="Status" Type="varchar" Mode="In" />
+          <Parameter Name="TagStatus" Type="varchar" Mode="In" />
+          <Parameter Name="ItemsPerPage" Type="int" Mode="In" />
+          <Parameter Name="Page" Type="int" Mode="In" />
+          <Parameter Name="Criteria" Type="int" Mode="In" />
+          <Parameter Name="TotalPages" Type="int" Mode="InOut" />
+          <Parameter Name="TotRows" Type="int" Mode="InOut" />
+          <Parameter Name="NumberOfPagesToReturn" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_AlarmTagDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="AssTageName" Type="varchar" Mode="In" />
+          <Parameter Name="AlarmType" Type="varchar" Mode="In" />
+          <Parameter Name="Site" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_GetAllStatusList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_GetMasterFieldsData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_GetSites" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="MASTERALARMModelStoreContainer">
+          <EntitySet Name="tbl_AlarmMasterEventAuditLog" EntityType="Self.tbl_AlarmMasterEventAuditLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_AlarmMasterExceptionLogging" EntityType="Self.tbl_AlarmMasterExceptionLogging" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblAlarmFields" EntityType="Self.tblAlarmFields" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblAlarmFieldsData" EntityType="Self.tblAlarmFieldsData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblAlarmsMaster" EntityType="Self.tblAlarmsMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblAlarmsMasterBookinImport" EntityType="Self.tblAlarmsMasterBookinImport" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tblAlarmFields_tblAlarmFieldsData" Association="Self.FK_tblAlarmFields_tblAlarmFieldsData">
+            <End Role="tblAlarmFields" EntitySet="tblAlarmFields" />
+            <End Role="tblAlarmFieldsData" EntitySet="tblAlarmFieldsData" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MASTERALARMModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblAlarmField">
+          <Key>
+            <PropertyRef Name="FieldID" />
+          </Key>
+          <Property Name="FieldID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Field_Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="tblAlarmFieldsDatas" Relationship="MASTERALARMModel.FK_tblAlarmFields_tblAlarmFieldsData" FromRole="tblAlarmField" ToRole="tblAlarmFieldsData" />
+        </EntityType>
+        <EntityType Name="tblAlarmFieldsData">
+          <Key>
+            <PropertyRef Name="FieldDataID" />
+          </Key>
+          <Property Name="FieldDataID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Value" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FieldID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tblAlarmField" Relationship="MASTERALARMModel.FK_tblAlarmFields_tblAlarmFieldsData" FromRole="tblAlarmFieldsData" ToRole="tblAlarmField" />
+          <Property Name="Retain" Type="Int32" />
+        </EntityType>
+        <EntityContainer Name="MASTERALARMEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblAlarmFields" EntityType="Self.tblAlarmField" />
+          <EntitySet Name="tblAlarmFieldsDatas" EntityType="Self.tblAlarmFieldsData" />
+          <FunctionImport Name="TESTDATA" ReturnType="Collection(MASTERALARMModel.TESTDATA_Result)">
+            <Parameter Name="SearchTerm" Mode="In" Type="String" />
+            <Parameter Name="Site" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="TotalPages" Mode="InOut" Type="Int32" />
+            <Parameter Name="TotRows" Mode="InOut" Type="Int32" />
+            <Parameter Name="NumberOfPagesToReturn" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="TESTDATATagDetails" ReturnType="Collection(MASTERALARMModel.TESTDATATagDetails_Result)">
+            <Parameter Name="AssTageName" Mode="In" Type="String" />
+            <Parameter Name="AlarmType" Mode="In" Type="String" />
+            <Parameter Name="Site" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_AlarmSearch" ReturnType="Collection(MASTERALARMModel.sp_AlarmSearch_Result)">
+            <Parameter Name="SearchTerm" Mode="In" Type="String" />
+            <Parameter Name="Site" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+            <Parameter Name="TagStatus" Mode="In" Type="String" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="Criteria" Mode="In" Type="Int32" />
+            <Parameter Name="TotalPages" Mode="InOut" Type="Int32" />
+            <Parameter Name="TotRows" Mode="InOut" Type="Int32" />
+            <Parameter Name="NumberOfPagesToReturn" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_AlarmTagDetails" ReturnType="Collection(MASTERALARMModel.sp_AlarmTagDetails_Result)">
+            <Parameter Name="AssTageName" Mode="In" Type="String" />
+            <Parameter Name="AlarmType" Mode="In" Type="String" />
+            <Parameter Name="Site" Mode="In" Type="String" />
+          </FunctionImport>
+          <AssociationSet Name="FK_tblAlarmFields_tblAlarmFieldsData" Association="MASTERALARMModel.FK_tblAlarmFields_tblAlarmFieldsData">
+            <End Role="tblAlarmField" EntitySet="tblAlarmFields" />
+            <End Role="tblAlarmFieldsData" EntitySet="tblAlarmFieldsDatas" />
+          </AssociationSet>
+          <FunctionImport Name="sp_GetAllStatusList" ReturnType="Collection(MASTERALARMModel.sp_GetAllStatusList_Result)" />
+          <FunctionImport Name="sp_GetSites" ReturnType="Collection(MASTERALARMModel.sp_GetSites_Result)" />
+          <EntitySet Name="tblAlarmsMasters" EntityType="MASTERALARMModel.tblAlarmsMaster" />
+          <FunctionImport Name="masterAlarmDB_sp_GetAllTagStatus" ReturnType="Collection(MASTERALARMModel.masterAlarmDB_sp_GetAllTagStatus_Result)" />
+          <EntitySet Name="tbl_AlarmMasterExceptionLogging" EntityType="MASTERALARMModel.tbl_AlarmMasterExceptionLogging" />
+          <EntitySet Name="tbl_AlarmMasterEventAuditLog" EntityType="MASTERALARMModel.tbl_AlarmMasterEventAuditLog" />
+          <EntitySet Name="tblAlarmsMasterBookinImports" EntityType="MASTERALARMModel.tblAlarmsMasterBookinImport" />
+          <FunctionImport Name="masterAlarmDB_sp_BookinAlarmTags" ReturnType="Collection(MASTERALARMModel.masterAlarmDB_sp_BookinAlarmTags_Result)">
+          <Parameter Name="Username" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="masterAlarmDB_sp_BookinLoadOfflineData">
+          <Parameter Name="Username" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="masterAlarmDB_sp_ExportReport" ReturnType="Collection(MASTERALARMModel.masterAlarmDB_sp_ExportReport_Result)">
+            <Parameter Name="SearchTerm" Mode="In" Type="String" />
+            <Parameter Name="Site" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+            <Parameter Name="TagStatus" Mode="In" Type="String" />
+            <Parameter Name="Criteria" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="masterAlarmDB_sp_BookinReset">
+          <Parameter Name="Username" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="masterAlarmDB_sp_BookinShowData" ReturnType="Collection(MASTERALARMModel.masterAlarmDB_sp_BookinShowData_Result)">
+            <Parameter Name="RowsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="PageIndex" Mode="In" Type="Int32" />
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="TotalPages" Mode="InOut" Type="Int32" />
+            <Parameter Name="TotalRows" Mode="InOut" Type="Int32" />
+            <Parameter Name="DataType" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_GetMasterFieldsData" ReturnType="Collection(MASTERALARMModel.sp_GetMasterFieldsData_Result)" />
+          <FunctionImport Name="masterAlarmDB_sp_BookinCheckData">
+            <Parameter Name="Username" Mode="In" Type="String" />
+            <Parameter Name="IsTagBookedIn" Mode="InOut" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="TESTDATA_Result">
+          <Property Type="String" Name="Associated_Tagname" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Type" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="Site" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="Source" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="20" />
+          <Property Type="Int64" Name="RowID" Nullable="true" />
+          <Property Type="String" Name="Design_Basis_Comment" Nullable="true" MaxLength="Max" />
+        </ComplexType>
+        <ComplexType Name="TESTDATATagDetails_Result">
+          <Property Type="String" Name="Associated_Tagname" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Type" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="Site" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="System" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Source" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Group" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Alarm_Text_for_Operator" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Setting" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="AlarmSetting_Units" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="AlarmSetting_Status" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Alarm_Priority" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DCS_Priority" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Design_Document_Reference" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Comment" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Level_of_Consequences" Nullable="true" />
+          <Property Type="Int32" Name="Urgency_of_Response" Nullable="true" />
+          <Property Type="String" Name="Defined_Response" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="Design_Basis_Comment" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="Project_or_FCA_Number" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="Project_or_FCA_Revision_Date" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Custodian" Nullable="true" MaxLength="25" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="ChangeDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Hard_wired_Colour" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Hard_wired_Location" Nullable="true" MaxLength="25" />
+          <Property Type="String" Name="Affiliated_Tag" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Hard_wired___IAS_Alarm_Type" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Box" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Slot" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Channel" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Review" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Review_team" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Review_Date" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Development_Status" Nullable="true" MaxLength="10" />
+          <Property Type="DateTime" Name="Status_Revision_Date" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UserModified" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="AlarmSuppressionDetail" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_AlarmSearch_Result">
+          <Property Type="String" Name="Associated_Tagname" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Type" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="Site" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="Source" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Design_Basis_Comment" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="ChangeDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Alarm_Text_for_Operator" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Development_Status" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="AlarmTagID" Nullable="false" />
+          <Property Type="String" Name="Custodian" Nullable="true" MaxLength="25" />
+        </ComplexType>
+        <ComplexType Name="sp_AlarmTagDetails_Result">
+          <Property Type="String" Name="Associated_Tagname" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Type" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="Site" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="System" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Source" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Group" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Alarm_Text_for_Operator" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Setting" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="AlarmSetting_Units" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="AlarmSetting_Status" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Alarm_Priority" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DCS_Priority" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Design_Document_Reference" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Comment" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Level_of_Consequences" Nullable="true" />
+          <Property Type="Int32" Name="Urgency_of_Response" Nullable="true" />
+          <Property Type="String" Name="Defined_Response" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="Design_Basis_Comment" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="Project_or_FCA_Number" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="Project_or_FCA_Revision_Date" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Custodian" Nullable="true" MaxLength="25" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="ChangeDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Hard_wired_Colour" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Hard_wired_Location" Nullable="true" MaxLength="25" />
+          <Property Type="String" Name="Affiliated_Tag" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Hard_wired___IAS_Alarm_Type" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Box" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Slot" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Channel" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Review" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Review_team" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Review_Date" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Development_Status" Nullable="true" MaxLength="10" />
+          <Property Type="DateTime" Name="Status_Revision_Date" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UserModified" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="AlarmSuppressionDetail" Nullable="true" />
+          <Property Type="Int32" Name="AlarmTagID" Nullable="false" />
+          <Property Type="String" Name="Status_Old" Nullable="true" MaxLength="40" />
+        </ComplexType>
+        <Association Name="FK_tblAlarmFields_tblAlarmFieldsData">
+          <End Type="MASTERALARMModel.tblAlarmField" Role="tblAlarmField" Multiplicity="1" />
+          <End Type="MASTERALARMModel.tblAlarmFieldsData" Role="tblAlarmFieldsData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblAlarmField">
+              <PropertyRef Name="FieldID" />
+            </Principal>
+            <Dependent Role="tblAlarmFieldsData">
+              <PropertyRef Name="FieldID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="sp_GetAllStatusList_Result">
+          <Property Type="Int32" Name="FieldDataID" Nullable="false" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="sp_GetSites_Result">
+          <Property Type="Int32" Name="FieldDataID" Nullable="false" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <EntityType Name="tblAlarmsMaster">
+          <Key>
+            <PropertyRef Name="AlarmTagID" />
+          </Key>
+          <Property Name="AlarmTagID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Associated_Tagname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Alarm_Type" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Site" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="System" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Source" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Group" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Alarm_Text_for_Operator" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Alarm_Setting" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="AlarmSetting_Units" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="AlarmSetting_Status" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Alarm_Priority" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DCS_Priority" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Design_Document_Reference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Alarm_Comment" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Level_of_Consequences" Type="Int32" />
+          <Property Name="Urgency_of_Response" Type="Int32" />
+          <Property Name="Defined_Response" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Design_Basis_Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Project_or_FCA_Number" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Project_or_FCA_Revision_Date" Type="DateTime" Precision="3" />
+          <Property Name="Custodian" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ChangeDate" Type="DateTime" Precision="3" />
+          <Property Name="Hard_wired_Colour" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Hard_wired_Location" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Affiliated_Tag" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Hard_wired___IAS_Alarm_Type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IAS_Box" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IAS_Slot" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IAS_Channel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Review" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Review_team" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Review_Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Development_Status" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Status_Revision_Date" Type="DateTime" Precision="3" />
+          <Property Name="DateModified" Type="DateTime" Precision="3" />
+          <Property Name="UserModified" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AlarmSuppressionDetail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Status_Old" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="masterAlarmDB_sp_GetAllTagStatus_Result">
+          <Property Type="Int32" Name="FieldDataID" Nullable="false" />
+          <Property Type="String" Name="Value" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <EntityType Name="tbl_AlarmMasterExceptionLogging">
+          <Key>
+            <PropertyRef Name="Logid" />
+          </Key>
+          <Property Name="Logid" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ExceptionMsg" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ExceptionType" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ExceptionSource" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ExceptionURL" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Logdate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tbl_AlarmMasterEventAuditLog">
+          <Key>
+            <PropertyRef Name="Eventid" />
+          </Key>
+          <Property Name="Eventid" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Action" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Eventdate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tblAlarmsMasterBookinImport">
+          <Key>
+            <PropertyRef Name="ImportID" />
+          </Key>
+          <Property Name="ImportID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AlarmTagID" Type="Int32" />
+          <Property Name="Associated_Tagname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Alarm_Type" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Site" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="System" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Source" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Group" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Alarm_Text_for_Operator" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Alarm_Setting" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="AlarmSetting_Units" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="AlarmSetting_Status" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Alarm_Priority" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DCS_Priority" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Design_Document_Reference" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Alarm_Comment" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Level_of_Consequences" Type="Int32" />
+          <Property Name="Urgency_of_Response" Type="Int32" />
+          <Property Name="Defined_Response" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Design_Basis_Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Project_or_FCA_Number" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Project_or_FCA_Revision_Date" Type="DateTime" Precision="3" />
+          <Property Name="Custodian" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ChangeDate" Type="DateTime" Precision="3" />
+          <Property Name="Hard_wired_Colour" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Hard_wired_Location" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Affiliated_Tag" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Hard_wired___IAS_Alarm_Type" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IAS_Box" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IAS_Slot" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IAS_Channel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Review" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Review_team" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Review_Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Development_Status" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Status_Revision_Date" Type="DateTime" Precision="3" />
+          <Property Name="DateModified" Type="DateTime" Precision="3" />
+          <Property Name="UserModified" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AlarmSuppressionDetail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ImportedBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UpdateFlag" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ImportDate" Type="DateTime" Precision="3" />
+          <Property Name="Status_Old" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="masterAlarmDB_sp_BookinAlarmTags_Result">
+          <Property Type="String" Name="Site" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="System" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Source" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Group" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="AlarmSetting_Units" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="AlarmSetting_Status" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Custodian" Nullable="true" MaxLength="25" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="ChangeDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Review" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UserModified" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="AlarmSuppressionDetail" Nullable="true" />
+          <Property Type="String" Name="Associated_Tagname" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Type" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Alarm_Text_for_Operator" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Setting" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Alarm_Priority" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DCS_Priority" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Design_Document_Reference" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Comment" Nullable="true" MaxLength="64" />
+          <Property Type="Int32" Name="Level_of_Consequences" Nullable="true" />
+          <Property Type="Int32" Name="Urgency_of_Response" Nullable="true" />
+          <Property Type="String" Name="Defined_Response" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="Design_Basis_Comment" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="Project_or_FCA_Number" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="Project_or_FCA_Revision_Date" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Hard_wired_Colour" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Hard_wired_Location" Nullable="true" MaxLength="25" />
+          <Property Type="String" Name="Affiliated_Tag" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Hard_wired___IAS_Alarm_Type" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Box" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Slot" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Channel" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Review_team" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Review_Date" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Development_Status" Nullable="true" MaxLength="10" />
+          <Property Type="DateTime" Name="Status_Revision_Date" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UpdateFlag" Nullable="false" MaxLength="50" />
+          </ComplexType>
+        <ComplexType Name="masterAlarmDB_sp_ExportReport_Result">
+          <Property Type="String" Name="Associated_Tagname" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Type" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="Site" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="Source" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Alarm_Text_for_Operator" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Design_Basis_Comment" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="ChangeDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Development_Status" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="Custodian" Nullable="true" MaxLength="25" />
+          <Property Type="String" Name="System" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Group" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Alarm_Setting" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="AlarmSetting_Units" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="AlarmSetting_Status" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Alarm_Priority" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DCS_Priority" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Design_Document_Reference" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Comment" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Level_of_Consequences" Nullable="true" />
+          <Property Type="Int32" Name="Urgency_of_Response" Nullable="true" />
+          <Property Type="String" Name="Defined_Response" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="Project_or_FCA_Number" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="Project_or_FCA_Revision_Date" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Hard_wired_Colour" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Hard_wired_Location" Nullable="true" MaxLength="25" />
+          <Property Type="String" Name="Affiliated_Tag" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Hard_wired___IAS_Alarm_Type" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Box" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Slot" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="IAS_Channel" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Review" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Review_team" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Review_Date" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="Status_Revision_Date" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DateModified" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UserModified" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="AlarmSuppressionDetail" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="masterAlarmDB_sp_BookinShowData_Result">
+          <Property Type="Int32" Name="AlarmTagID" Nullable="true" />
+          <Property Type="String" Name="Associated_Tagname" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Type" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Site" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Source" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="Design_Basis_Comment" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="20" />
+          <Property Type="DateTime" Name="ChangeDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="Alarm_Text_for_Operator" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Development_Status" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="UpdateFlag" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Custodian" Nullable="true" MaxLength="25" />
+        </ComplexType>
+        <ComplexType Name="sp_GetMasterFieldsData_Result">
+          <Property Type="String" Name="Site" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Type" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="System" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Source" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Alarm_Priority" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Process_Status" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Hard_Wired_Colour" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Hard_wired___IAS_Alarm_Type" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="IAS_Box" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="IAS_Slot" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="IAS_Channel" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Development_Status" Nullable="true" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MASTERALARMModelStoreContainer" CdmEntityContainer="MASTERALARMEntities">
+          <EntitySetMapping Name="tblAlarmFields">
+            <EntityTypeMapping TypeName="MASTERALARMModel.tblAlarmField">
+              <MappingFragment StoreEntitySet="tblAlarmFields">
+                <ScalarProperty Name="FieldID" ColumnName="FieldID" />
+                <ScalarProperty Name="Field_Type" ColumnName="Field Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblAlarmFieldsDatas">
+            <EntityTypeMapping TypeName="MASTERALARMModel.tblAlarmFieldsData">
+              <MappingFragment StoreEntitySet="tblAlarmFieldsData">
+                <ScalarProperty Name="Retain" ColumnName="Retain" />
+                <ScalarProperty Name="FieldDataID" ColumnName="FieldDataID" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="FieldID" ColumnName="FieldID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_AlarmSearch" FunctionName="MASTERALARMModel.Store.sp_AlarmSearch">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MASTERALARMModel.sp_AlarmSearch_Result">
+                <ScalarProperty Name="Associated_Tagname" ColumnName="Associated Tagname" />
+                <ScalarProperty Name="Alarm_Type" ColumnName="Alarm Type" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="Design_Basis_Comment" ColumnName="Design Basis Comment" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="Alarm_Text_for_Operator" ColumnName="Alarm Text for Operator" />
+                <ScalarProperty Name="Development_Status" ColumnName="Development Status" />
+                <ScalarProperty Name="AlarmTagID" ColumnName="AlarmTagID" />
+                <ScalarProperty Name="Custodian" ColumnName="Custodian" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_AlarmTagDetails" FunctionName="MASTERALARMModel.Store.sp_AlarmTagDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MASTERALARMModel.sp_AlarmTagDetails_Result">
+                <ScalarProperty Name="Associated_Tagname" ColumnName="Associated Tagname" />
+                <ScalarProperty Name="Alarm_Type" ColumnName="Alarm Type" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="System" ColumnName="System" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="Alarm_Text_for_Operator" ColumnName="Alarm Text for Operator" />
+                <ScalarProperty Name="Alarm_Setting" ColumnName="Alarm Setting" />
+                <ScalarProperty Name="AlarmSetting_Units" ColumnName="AlarmSetting_Units" />
+                <ScalarProperty Name="AlarmSetting_Status" ColumnName="AlarmSetting_Status" />
+                <ScalarProperty Name="Alarm_Priority" ColumnName="Alarm Priority" />
+                <ScalarProperty Name="DCS_Priority" ColumnName="DCS Priority" />
+                <ScalarProperty Name="Design_Document_Reference" ColumnName="Design Document Reference" />
+                <ScalarProperty Name="Alarm_Comment" ColumnName="Alarm Comment" />
+                <ScalarProperty Name="Level_of_Consequences" ColumnName="Level of Consequences" />
+                <ScalarProperty Name="Urgency_of_Response" ColumnName="Urgency of Response" />
+                <ScalarProperty Name="Defined_Response" ColumnName="Defined Response" />
+                <ScalarProperty Name="Design_Basis_Comment" ColumnName="Design Basis Comment" />
+                <ScalarProperty Name="Project_or_FCA_Number" ColumnName="Project or FCA Number" />
+                <ScalarProperty Name="Project_or_FCA_Revision_Date" ColumnName="Project or FCA Revision Date" />
+                <ScalarProperty Name="Custodian" ColumnName="Custodian" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="Hard_wired_Colour" ColumnName="Hard-wired Colour" />
+                <ScalarProperty Name="Hard_wired_Location" ColumnName="Hard-wired Location" />
+                <ScalarProperty Name="Affiliated_Tag" ColumnName="Affiliated Tag" />
+                <ScalarProperty Name="Hard_wired___IAS_Alarm_Type" ColumnName="Hard-wired / IAS Alarm Type" />
+                <ScalarProperty Name="IAS_Box" ColumnName="IAS Box" />
+                <ScalarProperty Name="IAS_Slot" ColumnName="IAS Slot" />
+                <ScalarProperty Name="IAS_Channel" ColumnName="IAS Channel" />
+                <ScalarProperty Name="Review" ColumnName="Review" />
+                <ScalarProperty Name="Review_team" ColumnName="Review team" />
+                <ScalarProperty Name="Review_Date" ColumnName="Review Date" />
+                <ScalarProperty Name="Development_Status" ColumnName="Development Status" />
+                <ScalarProperty Name="Status_Revision_Date" ColumnName="Status Revision Date" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="UserModified" ColumnName="UserModified" />
+                <ScalarProperty Name="AlarmSuppressionDetail" ColumnName="AlarmSuppressionDetail" />
+                <ScalarProperty Name="AlarmTagID" ColumnName="AlarmTagID" />
+                <ScalarProperty Name="Status_Old" ColumnName="Status_Old" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetAllStatusList" FunctionName="MASTERALARMModel.Store.sp_GetAllStatusList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MASTERALARMModel.sp_GetAllStatusList_Result">
+                <ScalarProperty Name="FieldDataID" ColumnName="FieldDataID" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetSites" FunctionName="MASTERALARMModel.Store.sp_GetSites">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MASTERALARMModel.sp_GetSites_Result">
+                <ScalarProperty Name="FieldDataID" ColumnName="FieldDataID" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tblAlarmsMasters">
+            <EntityTypeMapping TypeName="MASTERALARMModel.tblAlarmsMaster">
+              <MappingFragment StoreEntitySet="tblAlarmsMaster">
+                <ScalarProperty Name="Status_Old" ColumnName="Status_Old" />
+                <ScalarProperty Name="AlarmSuppressionDetail" ColumnName="AlarmSuppressionDetail" />
+                <ScalarProperty Name="UserModified" ColumnName="UserModified" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Status_Revision_Date" ColumnName="Status Revision Date" />
+                <ScalarProperty Name="Development_Status" ColumnName="Development Status" />
+                <ScalarProperty Name="Review_Date" ColumnName="Review Date" />
+                <ScalarProperty Name="Review_team" ColumnName="Review team" />
+                <ScalarProperty Name="Review" ColumnName="Review" />
+                <ScalarProperty Name="IAS_Channel" ColumnName="IAS Channel" />
+                <ScalarProperty Name="IAS_Slot" ColumnName="IAS Slot" />
+                <ScalarProperty Name="IAS_Box" ColumnName="IAS Box" />
+                <ScalarProperty Name="Hard_wired___IAS_Alarm_Type" ColumnName="Hard-wired / IAS Alarm Type" />
+                <ScalarProperty Name="Affiliated_Tag" ColumnName="Affiliated Tag" />
+                <ScalarProperty Name="Hard_wired_Location" ColumnName="Hard-wired Location" />
+                <ScalarProperty Name="Hard_wired_Colour" ColumnName="Hard-wired Colour" />
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Custodian" ColumnName="Custodian" />
+                <ScalarProperty Name="Project_or_FCA_Revision_Date" ColumnName="Project or FCA Revision Date" />
+                <ScalarProperty Name="Project_or_FCA_Number" ColumnName="Project or FCA Number" />
+                <ScalarProperty Name="Design_Basis_Comment" ColumnName="Design Basis Comment" />
+                <ScalarProperty Name="Defined_Response" ColumnName="Defined Response" />
+                <ScalarProperty Name="Urgency_of_Response" ColumnName="Urgency of Response" />
+                <ScalarProperty Name="Level_of_Consequences" ColumnName="Level of Consequences" />
+                <ScalarProperty Name="Alarm_Comment" ColumnName="Alarm Comment" />
+                <ScalarProperty Name="Design_Document_Reference" ColumnName="Design Document Reference" />
+                <ScalarProperty Name="DCS_Priority" ColumnName="DCS Priority" />
+                <ScalarProperty Name="Alarm_Priority" ColumnName="Alarm Priority" />
+                <ScalarProperty Name="AlarmSetting_Status" ColumnName="AlarmSetting_Status" />
+                <ScalarProperty Name="AlarmSetting_Units" ColumnName="AlarmSetting_Units" />
+                <ScalarProperty Name="Alarm_Setting" ColumnName="Alarm Setting" />
+                <ScalarProperty Name="Alarm_Text_for_Operator" ColumnName="Alarm Text for Operator" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="System" ColumnName="System" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="Alarm_Type" ColumnName="Alarm Type" />
+                <ScalarProperty Name="Associated_Tagname" ColumnName="Associated Tagname" />
+                <ScalarProperty Name="AlarmTagID" ColumnName="AlarmTagID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="masterAlarmDB_sp_GetAllTagStatus" FunctionName="MASTERALARMModel.Store.masterAlarmDB_sp_GetAllTagStatus">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MASTERALARMModel.masterAlarmDB_sp_GetAllTagStatus_Result">
+                <ScalarProperty Name="FieldDataID" ColumnName="FieldDataID" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tbl_AlarmMasterExceptionLogging">
+            <EntityTypeMapping TypeName="MASTERALARMModel.tbl_AlarmMasterExceptionLogging">
+              <MappingFragment StoreEntitySet="tbl_AlarmMasterExceptionLogging">
+                <ScalarProperty Name="Logdate" ColumnName="Logdate" />
+                <ScalarProperty Name="ExceptionURL" ColumnName="ExceptionURL" />
+                <ScalarProperty Name="ExceptionSource" ColumnName="ExceptionSource" />
+                <ScalarProperty Name="ExceptionType" ColumnName="ExceptionType" />
+                <ScalarProperty Name="ExceptionMsg" ColumnName="ExceptionMsg" />
+                <ScalarProperty Name="Logid" ColumnName="Logid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_AlarmMasterEventAuditLog">
+            <EntityTypeMapping TypeName="MASTERALARMModel.tbl_AlarmMasterEventAuditLog">
+              <MappingFragment StoreEntitySet="tbl_AlarmMasterEventAuditLog">
+                <ScalarProperty Name="Eventdate" ColumnName="Eventdate" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Eventid" ColumnName="Eventid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblAlarmsMasterBookinImports">
+            <EntityTypeMapping TypeName="MASTERALARMModel.tblAlarmsMasterBookinImport">
+              <MappingFragment StoreEntitySet="tblAlarmsMasterBookinImport">
+                <ScalarProperty Name="Status_Old" ColumnName="Status_Old" />
+                <ScalarProperty Name="ImportDate" ColumnName="ImportDate" />
+                <ScalarProperty Name="UpdateFlag" ColumnName="UpdateFlag" />
+                <ScalarProperty Name="ImportedBy" ColumnName="ImportedBy" />
+                <ScalarProperty Name="AlarmSuppressionDetail" ColumnName="AlarmSuppressionDetail" />
+                <ScalarProperty Name="UserModified" ColumnName="UserModified" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Status_Revision_Date" ColumnName="Status Revision Date" />
+                <ScalarProperty Name="Development_Status" ColumnName="Development Status" />
+                <ScalarProperty Name="Review_Date" ColumnName="Review Date" />
+                <ScalarProperty Name="Review_team" ColumnName="Review team" />
+                <ScalarProperty Name="Review" ColumnName="Review" />
+                <ScalarProperty Name="IAS_Channel" ColumnName="IAS Channel" />
+                <ScalarProperty Name="IAS_Slot" ColumnName="IAS Slot" />
+                <ScalarProperty Name="IAS_Box" ColumnName="IAS Box" />
+                <ScalarProperty Name="Hard_wired___IAS_Alarm_Type" ColumnName="Hard-wired / IAS Alarm Type" />
+                <ScalarProperty Name="Affiliated_Tag" ColumnName="Affiliated Tag" />
+                <ScalarProperty Name="Hard_wired_Location" ColumnName="Hard-wired Location" />
+                <ScalarProperty Name="Hard_wired_Colour" ColumnName="Hard-wired Colour" />
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Custodian" ColumnName="Custodian" />
+                <ScalarProperty Name="Project_or_FCA_Revision_Date" ColumnName="Project or FCA Revision Date" />
+                <ScalarProperty Name="Project_or_FCA_Number" ColumnName="Project or FCA Number" />
+                <ScalarProperty Name="Design_Basis_Comment" ColumnName="Design Basis Comment" />
+                <ScalarProperty Name="Defined_Response" ColumnName="Defined Response" />
+                <ScalarProperty Name="Urgency_of_Response" ColumnName="Urgency of Response" />
+                <ScalarProperty Name="Level_of_Consequences" ColumnName="Level of Consequences" />
+                <ScalarProperty Name="Alarm_Comment" ColumnName="Alarm Comment" />
+                <ScalarProperty Name="Design_Document_Reference" ColumnName="Design Document Reference" />
+                <ScalarProperty Name="DCS_Priority" ColumnName="DCS Priority" />
+                <ScalarProperty Name="Alarm_Priority" ColumnName="Alarm Priority" />
+                <ScalarProperty Name="AlarmSetting_Status" ColumnName="AlarmSetting_Status" />
+                <ScalarProperty Name="AlarmSetting_Units" ColumnName="AlarmSetting_Units" />
+                <ScalarProperty Name="Alarm_Setting" ColumnName="Alarm Setting" />
+                <ScalarProperty Name="Alarm_Text_for_Operator" ColumnName="Alarm Text for Operator" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="System" ColumnName="System" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="Alarm_Type" ColumnName="Alarm Type" />
+                <ScalarProperty Name="Associated_Tagname" ColumnName="Associated Tagname" />
+                <ScalarProperty Name="AlarmTagID" ColumnName="AlarmTagID" />
+                <ScalarProperty Name="ImportID" ColumnName="ImportID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="masterAlarmDB_sp_BookinAlarmTags" FunctionName="MASTERALARMModel.Store.masterAlarmDB_sp_BookinAlarmTags">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MASTERALARMModel.masterAlarmDB_sp_BookinAlarmTags_Result">
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="System" ColumnName="System" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="AlarmSetting_Units" ColumnName="AlarmSetting_Units" />
+                <ScalarProperty Name="AlarmSetting_Status" ColumnName="AlarmSetting_Status" />
+                <ScalarProperty Name="Custodian" ColumnName="Custodian" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="Review" ColumnName="Review" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="UserModified" ColumnName="UserModified" />
+                <ScalarProperty Name="AlarmSuppressionDetail" ColumnName="AlarmSuppressionDetail" />
+                <ScalarProperty Name="Associated_Tagname" ColumnName="Associated_Tagname" />
+                <ScalarProperty Name="Alarm_Type" ColumnName="Alarm_Type" />
+                <ScalarProperty Name="Alarm_Text_for_Operator" ColumnName="Alarm_Text_for_Operator" />
+                <ScalarProperty Name="Alarm_Setting" ColumnName="Alarm_Setting" />
+                <ScalarProperty Name="Alarm_Priority" ColumnName="Alarm_Priority" />
+                <ScalarProperty Name="DCS_Priority" ColumnName="DCS_Priority" />
+                <ScalarProperty Name="Design_Document_Reference" ColumnName="Design_Document_Reference" />
+                <ScalarProperty Name="Alarm_Comment" ColumnName="Alarm_Comment" />
+                <ScalarProperty Name="Level_of_Consequences" ColumnName="Level_of_Consequences" />
+                <ScalarProperty Name="Urgency_of_Response" ColumnName="Urgency_of_Response" />
+                <ScalarProperty Name="Defined_Response" ColumnName="Defined_Response" />
+                <ScalarProperty Name="Design_Basis_Comment" ColumnName="Design_Basis_Comment" />
+                <ScalarProperty Name="Project_or_FCA_Number" ColumnName="Project_or_FCA_Number" />
+                <ScalarProperty Name="Project_or_FCA_Revision_Date" ColumnName="Project_or_FCA_Revision_Date" />
+                <ScalarProperty Name="Hard_wired_Colour" ColumnName="Hard_wired_Colour" />
+                <ScalarProperty Name="Hard_wired_Location" ColumnName="Hard_wired_Location" />
+                <ScalarProperty Name="Affiliated_Tag" ColumnName="Affiliated_Tag" />
+                <ScalarProperty Name="Hard_wired___IAS_Alarm_Type" ColumnName="Hard_wired___IAS_Alarm_Type" />
+                <ScalarProperty Name="IAS_Box" ColumnName="IAS_Box" />
+                <ScalarProperty Name="IAS_Slot" ColumnName="IAS_Slot" />
+                <ScalarProperty Name="IAS_Channel" ColumnName="IAS_Channel" />
+                <ScalarProperty Name="Review_team" ColumnName="Review_team" />
+                <ScalarProperty Name="Review_Date" ColumnName="Review_Date" />
+                <ScalarProperty Name="Development_Status" ColumnName="Development_Status" />
+                <ScalarProperty Name="Status_Revision_Date" ColumnName="Status_Revision_Date" />
+                <ScalarProperty Name="UpdateFlag" ColumnName="UpdateFlag" />
+                </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="masterAlarmDB_sp_BookinLoadOfflineData" FunctionName="MASTERALARMModel.Store.masterAlarmDB_sp_BookinLoadOfflineData" />
+          <FunctionImportMapping FunctionImportName="masterAlarmDB_sp_ExportReport" FunctionName="MASTERALARMModel.Store.masterAlarmDB_sp_ExportReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MASTERALARMModel.masterAlarmDB_sp_ExportReport_Result">
+                <ScalarProperty Name="Associated_Tagname" ColumnName="Associated Tagname" />
+                <ScalarProperty Name="Alarm_Type" ColumnName="Alarm Type" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="Alarm_Text_for_Operator" ColumnName="Alarm Text for Operator" />
+                <ScalarProperty Name="Design_Basis_Comment" ColumnName="Design Basis Comment" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="Development_Status" ColumnName="Development Status" />
+                <ScalarProperty Name="Custodian" ColumnName="Custodian" />
+                <ScalarProperty Name="System" ColumnName="System" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="Alarm_Setting" ColumnName="Alarm Setting" />
+                <ScalarProperty Name="AlarmSetting_Units" ColumnName="AlarmSetting_Units" />
+                <ScalarProperty Name="AlarmSetting_Status" ColumnName="AlarmSetting_Status" />
+                <ScalarProperty Name="Alarm_Priority" ColumnName="Alarm Priority" />
+                <ScalarProperty Name="DCS_Priority" ColumnName="DCS Priority" />
+                <ScalarProperty Name="Design_Document_Reference" ColumnName="Design Document Reference" />
+                <ScalarProperty Name="Alarm_Comment" ColumnName="Alarm Comment" />
+                <ScalarProperty Name="Level_of_Consequences" ColumnName="Level of Consequences" />
+                <ScalarProperty Name="Urgency_of_Response" ColumnName="Urgency of Response" />
+                <ScalarProperty Name="Defined_Response" ColumnName="Defined Response" />
+                <ScalarProperty Name="Project_or_FCA_Number" ColumnName="Project or FCA Number" />
+                <ScalarProperty Name="Project_or_FCA_Revision_Date" ColumnName="Project or FCA Revision Date" />
+                <ScalarProperty Name="Hard_wired_Colour" ColumnName="Hard-wired Colour" />
+                <ScalarProperty Name="Hard_wired_Location" ColumnName="Hard-wired Location" />
+                <ScalarProperty Name="Affiliated_Tag" ColumnName="Affiliated Tag" />
+                <ScalarProperty Name="Hard_wired___IAS_Alarm_Type" ColumnName="Hard-wired / IAS Alarm Type" />
+                <ScalarProperty Name="IAS_Box" ColumnName="IAS Box" />
+                <ScalarProperty Name="IAS_Slot" ColumnName="IAS Slot" />
+                <ScalarProperty Name="IAS_Channel" ColumnName="IAS Channel" />
+                <ScalarProperty Name="Review" ColumnName="Review" />
+                <ScalarProperty Name="Review_team" ColumnName="Review team" />
+                <ScalarProperty Name="Review_Date" ColumnName="Review Date" />
+                <ScalarProperty Name="Status_Revision_Date" ColumnName="Status Revision Date" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="UserModified" ColumnName="UserModified" />
+                <ScalarProperty Name="AlarmSuppressionDetail" ColumnName="AlarmSuppressionDetail" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="masterAlarmDB_sp_BookinReset" FunctionName="MASTERALARMModel.Store.masterAlarmDB_sp_BookinReset" />
+          <FunctionImportMapping FunctionImportName="masterAlarmDB_sp_BookinShowData" FunctionName="MASTERALARMModel.Store.masterAlarmDB_sp_BookinShowData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MASTERALARMModel.masterAlarmDB_sp_BookinShowData_Result">
+                <ScalarProperty Name="AlarmTagID" ColumnName="AlarmTagID" />
+                <ScalarProperty Name="Associated_Tagname" ColumnName="Associated_Tagname" />
+                <ScalarProperty Name="Alarm_Type" ColumnName="Alarm_Type" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="Design_Basis_Comment" ColumnName="Design_Basis_Comment" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+                <ScalarProperty Name="Alarm_Text_for_Operator" ColumnName="Alarm_Text_for_Operator" />
+                <ScalarProperty Name="Development_Status" ColumnName="Development_Status" />
+                <ScalarProperty Name="UpdateFlag" ColumnName="UpdateFlag" />
+                <ScalarProperty Name="Custodian" ColumnName="Custodian" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_GetMasterFieldsData" FunctionName="MASTERALARMModel.Store.sp_GetMasterFieldsData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MASTERALARMModel.sp_GetMasterFieldsData_Result">
+                <ScalarProperty Name="Site" ColumnName="Site" />
+                <ScalarProperty Name="Alarm_Type" ColumnName="Alarm Type" />
+                <ScalarProperty Name="System" ColumnName="System" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="Alarm_Priority" ColumnName="Alarm Priority" />
+                <ScalarProperty Name="Process_Status" ColumnName="Process Status" />
+                <ScalarProperty Name="Hard_Wired_Colour" ColumnName="Hard-Wired Colour" />
+                <ScalarProperty Name="Hard_wired___IAS_Alarm_Type" ColumnName="Hard-wired / IAS Alarm Type" />
+                <ScalarProperty Name="IAS_Box" ColumnName="IAS Box" />
+                <ScalarProperty Name="IAS_Slot" ColumnName="IAS Slot" />
+                <ScalarProperty Name="IAS_Channel" ColumnName="IAS Channel" />
+                <ScalarProperty Name="Development_Status" ColumnName="Development Status" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="masterAlarmDB_sp_BookinCheckData" FunctionName="MASTERALARMModel.Store.masterAlarmDB_sp_BookinCheckData" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

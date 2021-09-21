@@ -1,0 +1,494 @@
+﻿@model AlarmTagProject.Models.sp_AlarmTagDetails_Result
+
+
+<script type="text/javascript">
+   
+    $(document).ready(function () {
+            var alarmPriority = $("#Alarm_Priority").val();
+            if (alarmPriority != "") {
+                $("#ddlAlarmPrority").find("option:contains(" + alarmPriority + ")").attr('selected', 'selected');
+            }
+            else {
+                $('#ddlAlarmPrority').val('');
+            }       
+    });
+
+    
+</script>
+
+<style>
+    fieldset {
+    border: 1px solid #dddddd !important;
+    border-radius: 1px !important;
+    
+}
+
+fieldset legend {
+    padding: 1px 1px  !important;
+    border-radius: 1px !important;
+    box-shadow: 0 0 0 1px #ddd ;
+    margin-left: 20px !important;
+    color:yellow;
+    font-size:12px;
+    font-weight:bold;
+}
+.TDChange{
+    padding:0px !important;
+    vertical-align:middle
+}
+h4{
+    font-size:12px !important;
+}
+
+    .btnHighlight {
+        background-color:lightpink;
+    }
+</style>
+
+
+<div>
+     <table class="table table-bordered" style="margin-bottom:0px;text-align:right !important;background-color:#659DBD !important">
+ 
+     
+            <tr > 
+                <td class="TDChange"><h4 style="line-height:0.5 !important">Alarm Tag</h4></td>
+                <td class="TDChange" style="width:500px;text-align:left !important;"> 
+                    <input type="text" id="AlarmTagID" name="AlarmTagID" value="@Model.AlarmTagID" hidden="hidden"/>                
+                <input type="text" id="Associated_Tagname"  name="Associated_Tagname"  value="@Model.Associated_Tagname" disabled="disabled"/></td>
+                @Html.HiddenFor(m => m.Associated_Tagname)
+                <td rowspan="5">
+                <fieldset>
+                    <legend style="width:150px;color:#FFFF00 !important">Waiting on action form</legend>
+                    <table class="table table-bordered" style="background-color:#659DBD;">
+                    <tr>
+                         <td class="TDChange"><h4 style="line-height:0.5 !important">Project/FCA Number</h4></td>
+                        <td class="TDChange" style="text-align:left !important;">
+                                <input type="text" id="Project_or_FCA_Number"  name="Project_or_FCA_Number"   value="@Model.Project_or_FCA_Number"  readonly="readonly"/>
+                        </td>
+                        <td class="TDChange" style="text-align:left !important;">@if (Model.Project_or_FCA_Revision_Date != null)
+                        {
+                         <input type="text" style="width:100px" id="Project_or_FCA_Revision_Date"  name="Project_or_FCA_Revision_Date"  
+                                value='@Model.Project_or_FCA_Revision_Date.Value.ToString("dd/MM/yyyy")' readonly="readonly"/>
+
+                        }
+                        else
+                        { <input type="text" style="width:100px" id="Project_or_FCA_Revision_Date" name="Project_or_FCA_Revision_Date" readonly="readonly"/> }
+                        </td>
+                    </tr>
+
+<tr><td class="TDChange"><h4 style="line-height:0.5 !important">Custodian</h4></td><td class="TDChange" style="text-align:left !important;">
+    <input type="text"  id="Custodian"  name="Custodian"  value="@Model.Custodian" readonly="readonly" /></td></tr>
+
+</table>
+
+</fieldset></td>
+
+</tr>
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important">Type</h4></td>
+         <td class="TDChange" style="text-align:left !important;">
+    <select disabled="disabled" id="Alarm_Type"  name="Alarm_Type"><option>@Model.Alarm_Type</option></select></td>
+    @Html.HiddenFor(m => m.Alarm_Type)
+</tr>
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important">Site</h4></td>
+         <td class="TDChange" style="text-align:left !important;">
+        <select disabled="disabled" id="Site"  name="Site"><option>@Model.Site</option></select></td>
+        @Html.HiddenFor(m => m.Site)
+</tr>
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important">System</h4></td>
+    <td class="TDChange" style="text-align:left !important;">
+        @Html.DropDownListFor(m => m.System, new SelectList((System.Collections.IEnumerable)ViewData["SystemList"], "Value", "Value"))
+    </td>
+</tr>
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important">Source</h4></td> 
+    <td class="TDChange" style="text-align:left !important;">    
+        @Html.DropDownListFor(m => m.Source, new SelectList((System.Collections.IEnumerable)ViewData["SourceList"], "Value", "Value"))        
+    </td>
+
+</tr>
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important">Alarm Group</h4></td>
+
+<td class="TDChange" style="text-align:left !important;">
+    <input type="text" id="Group"  name="Group" value="@Model.Group" readonly="readonly"/></td>
+
+<td rowspan="8">
+
+<table class="table table-bordered" style="background-color:#659DBD;">
+
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Process Status Old</h4></td>
+                            <td class="TDChange" style="text-align:left !important;">
+                                <input type="text" id="Status_Old" name="Status_Old" value="@Model.Status_Old" disabled="disabled" />
+                                @Html.HiddenFor(m => m.Status_Old)
+                            </td>                            
+                            
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Process Status</h4></td>
+                            <td class="TDChange" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.Status, new SelectList((System.Collections.IEnumerable)ViewData["ProcessStatusList"], "Value", "Value"))
+                            </td>
+                            <td style="text-align:left !important;">
+                            @if (Model.ChangeDate != null)
+                            { 
+                                <input type="text" style="width:100px" id="ChangeDate"  name="ChangeDate"  value='@Model.ChangeDate.Value.ToString("dd/MM/yyyy")' readonly="readonly" />
+                                
+                            }
+                            else
+                            { <input type="text" style="width:100px" id="ChangeDate"  name="ChangeDate" value=""  readonly="readonly"/>}
+                              
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Hard-wired Colour</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.Hard_wired_Colour, new SelectList((System.Collections.IEnumerable)ViewData["HwColorList"], "Value", "Value"))
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Hard wired Location</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            <input type="text" id="Hard_wired_Location"  name="Hard_wired_Location"  value="@Model.Hard_wired_Location" readonly="readonly" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Affiliated Tag</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            <input type="text" value="@Model.Affiliated_Tag" id="Affiliated_Tag"  name="Affiliated_Tag" readonly="readonly"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">Hard-wired / IAS Alarm Type</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.Hard_wired___IAS_Alarm_Type, new SelectList((System.Collections.IEnumerable)ViewData["HwIasList"], "Value", "Value"))
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">IAS Box</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.IAS_Box, new SelectList((System.Collections.IEnumerable)ViewData["IasBoxList"], "Value", "Value"))
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">IAS Slot</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.IAS_Slot, new SelectList((System.Collections.IEnumerable)ViewData["IasSlotList"], "Value", "Value"))
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important">IAS Channel</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @Html.DropDownListFor(m => m.IAS_Channel, new SelectList((System.Collections.IEnumerable)ViewData["IasChannelList"], "Value", "Value"))                            
+                            </td>
+                        </tr>
+                        @*<tr>
+                            <td class="TDChange"><h4 style="line-height:0.5 !important;color:#FFFF00 !important">Reviewed</h4></td>
+                            <td class="TDChange" colspan="2" style="text-align:left !important;">
+                            @if (Model.Review != null)
+                            {
+                                if (Model.Review.ToLower() == "yes")
+                                { <input type="checkbox" checked="checked"  readonly="readonly"/> }
+                                else
+                                {<input type="checkbox"  readonly="readonly" /> }
+                            }
+                            else
+                            { <input type="checkbox"  readonly="readonly" />}</td>
+
+</tr>*@
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important;color:#FFFF00 !important">By</h4></td>
+
+<td class="TDChange" style="text-align:left !important;">
+    <input type="text" id="Review_team"  name="Review_team" value="@Model.Review_team" readonly="readonly" />
+</td>
+    <td class="TDChange" style="text-align:left !important;">
+        @if (Model.Review_Date != null)
+        {
+            <input type="text" style="width:80px" id="Review_Date"  name="Review_Date" value='@Model.Review_Date' readonly="readonly" />
+        }
+        else
+        {
+            <input type="text" style="width:80px" id="Review_Date" name="Review_Date" value="" readonly="readonly"/>
+        }
+    </td>
+
+</tr>
+
+<tr>
+
+<td class="TDChange"><h4 style="line-height:0.5 !important;color:#FFFF00 !important">Tag Status</h4></td>
+
+    <td class="TDChange" style="text-align:left !important;">
+    @Html.DropDownListFor(m => m.Development_Status, new SelectList((System.Collections.IEnumerable)ViewData["TagStatusList"], "Value", "Value"))
+    </td>
+
+<td class="TDChange" style="text-align:left !important;">@if (Model.Status_Revision_Date != null)
+{ <input type="text" style="width:100px" id="Status_Revision_Date"  name="Status_Revision_Date" value='@Model.Status_Revision_Date.Value.ToString("dd/MM/yyyy")'  readonly="readonly" /> }
+else
+{
+    <input type="text" style="width:100px" id="Status_Revision_Date" name="Status_Revision_Date" value="" readonly="readonly" />
+}
+    </td>
+
+</tr>
+
+</table>
+
+<table  class="table-bordered" style="width:100%;background-color:#659DBD !important">
+                        <tr><td>
+                                <fieldset >
+                                    <legend style="width:150px;background-color:darkmagenta;">Modified</legend>
+                                    <table class="table-bordered" style="width:100%;background-color:#659DBD !important">
+                                        <tr>
+                                            <td class="TDChange" style="text-align:left !important;">
+                                                <input type="text" id="UserModified"  name="UserModified"  value="@Model.UserModified" readonly="readonly"/>
+                                            </td>
+                                            <td class="TDChange" style="text-align:left !important;">
+                                                @if (Model.DateModified != null)
+                                                {
+                                                    <input type="text" id="DateModified"  name="DateModified" disabled="disabled" value='@Model.DateModified.Value.ToString("dd/MM/yyyy")' readonly="readonly" />
+                                                }
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </fieldset>
+                            </td></tr>
+                    </table>
+
+                </td>
+            </tr>
+            <tr>
+                <td class="TDChange"><h4 style="line-height:0.5 !important">Description</h4></td>
+                <td class="TDChange" style="text-align:left !important;">
+                    <input style="width:300px;max-width:300px !important"  maxlength="50" type="text" id="Alarm_Text_for_Operator"  name="Alarm_Text_for_Operator" value="@Model.Alarm_Text_for_Operator" readonly="readonly" />
+              </td>
+
+
+            </tr>
+            <tr>
+                <td class="TDChange"><h4 style="line-height:0.5 !important">Alarm Settings <span style="color:blue">-Units</span></h4></td>
+               
+                <td class="TDChange">
+                    <table width="100%" style="background-color:#659DBD !important">
+                    <tr>
+                        <td style="border-top:0px !important;border-right:1px solid #dddddd !important;padding:0px !important;text-align:left !important;">
+                            <input type="text" id="AlarmSetting_Units"  name="AlarmSetting_Units" value="@Model.AlarmSetting_Units" readonly="readonly" />
+                        </td>
+                        <td style="padding:0px !important;border-top:0px !important;border-right:1px solid #dddddd !important;">
+                        <h4 style="line-height:0.5 !important"><span style="color:blue">-Status</span></h4>
+                        </td>
+                        <td style="padding:0px !important;border-top:0px !important;border-right:1px solid #dddddd !important;text-align:left !important;">
+                        <input type="text" id="AlarmSetting_Status"  name="AlarmSetting_Status" value="@Model.AlarmSetting_Status" readonly="readonly" />
+                        </td>
+                    </tr>
+                    </table>
+                </td>
+
+        </tr>
+        <tr>
+            <td class="TDChange"><h4 style="line-height:0.5 !important">Defined Response</h4></td>
+            <td class="TDChange" style="text-align:left !important;">
+                <input type="text" id="Defined_Response"  name="Defined_Response"  value="@Model.Defined_Response" style="width:500px;max-width:500px !important"  readonly="readonly"/>
+        </td>
+
+
+    </tr>
+    <tr>
+        <td style="padding:0px !important;"  ><h4 style="line-height:0.5 !important">Alarm Priority</h4></td>
+        <td class="TDChange" style="text-align:left !important;">
+            @Html.DropDownList("ddlAlarmPrority", new SelectList((System.Collections.IEnumerable)ViewData["AlarmProrityList"], "Value", "Value"), new { @disabled = "disabled" })
+            @Html.HiddenFor(m => m.Alarm_Priority)
+        </td>
+       
+    </tr>
+    <tr>
+        <td class="TDChange"></td>
+        <td class="TDChange">
+           <table class="table-bordered" style="border-style:groove;background-color:#659DBD !important">
+               <tr><td colspan="5" style="padding:0px;">Consequences of not responding to Alarm</td></tr>
+               <tr><td></td>
+               <td>
+                   @Html.HiddenFor(m => m.Urgency_of_Response)
+                   @Html.HiddenFor(m => m.Level_of_Consequences)
+               </td>
+               <td>SERIOUS</td><td>MODERATE</td><td>MINOR</td></tr>
+               <tr>
+               <td rowspan="3" style="font-size:10px !important" >U<br/>R<br />G<br />E<br />N<br />C<br />Y</td>
+               <td>&#60;15 min</td>
+               @if (Model.Urgency_of_Response == 1 && Model.Level_of_Consequences == 1)
+               {
+                  <td>                      
+                      <input  class="btnHighlight" type="button" id="matrix11" value="PRTY1"  />
+                   </td>
+               }
+               else
+               {
+                    <td >
+                        <input type="button" id="matrix11" value="PRTY1"  />
+                    </td>
+               }
+                   @if (Model.Urgency_of_Response == 1 && Model.Level_of_Consequences == 2)
+                   {
+                        <td>
+                            
+                            <input  class="btnHighlight" type="button" id="matrix12" value="PRTY2" />
+                        </td>
+                   }
+                   else
+                   {
+                       <td>
+                           <input type="button" id="matrix12" value="PRTY2" />
+                       </td>}
+                   @if (Model.Urgency_of_Response == 1 && Model.Level_of_Consequences == 3)
+                   {
+                            <td class="btnHighlight" >
+                                <input type="button" id="matrix13" value="PRTY2"  />
+                            </td> }
+                   else
+                   {
+                       <td>
+                           <input type="button" id="matrix13" value="PRTY2"  />
+                       </td>
+                   }</tr>
+               <tr>
+                   <td>15-45 min</td>
+                   @if (Model.Urgency_of_Response == 2 && Model.Level_of_Consequences == 1)
+                   {
+                        <td >
+                            <input  class="btnHighlight" type="button" id="matrix21" value="PRTY1"  />
+                        </td>
+                   }
+                   else
+                   {
+                       <td>
+                           <input type="button" id="matrix21" value="PRTY1"  />
+                        </td>
+                   }
+                   @if (Model.Urgency_of_Response == 2 && Model.Level_of_Consequences == 2)
+                   {
+                       <td >
+                           <input class="btnHighlight" type="button" id="matrix22" value="PRTY2" />
+                       </td>
+                   }
+                   else
+                   {
+                        <td>
+                            <input type="button" id="matrix22" value="PRTY2" />
+                        </td>}
+                   @if (Model.Urgency_of_Response == 2 && Model.Level_of_Consequences == 3)
+                   {
+                       <td>
+                           <input  class="btnHighlight" type="button" id="matrix23" value="PRTY3"  />
+                        </td> }
+                   else
+                   {
+                        <td>
+                            <input type="button" id="matrix23" value="PRTY3"  />
+                        </td>}
+               </tr>
+               <tr>
+                   <td>&#62;45 min</td>
+                   @if (Model.Urgency_of_Response == 3 && Model.Level_of_Consequences == 1)
+                   {
+                    <td>
+                        <input  class="btnHighlight" type="button" id="matrix31" value="PRTY2"  />
+                    </td>}
+                   else
+                   {
+                       <td>
+                          <input type="button" id="matrix31" value="PRTY2"  />
+                        </td>}
+                   @if (Model.Urgency_of_Response == 3 && Model.Level_of_Consequences == 2)
+                   {
+                       <td>
+                           <input  class="btnHighlight" type="button" id="matrix32" value="PRTY2"  />
+                       </td>
+                   }
+                   else
+                   {
+                        <td>
+                            <input type="button" id="matrix32" value="PRTY2"/>
+                        </td>
+                   }
+                   @if (Model.Urgency_of_Response == 3 && Model.Level_of_Consequences == 3)
+                   {
+                       <td>
+                           <input  class="btnHighlight"  type="button" id="matrix33" value="PRTY3"  />
+                        </td> }
+                   else
+                   {
+                    <td>
+                        <input type="button" id="matrix33" value="PRTY3" />
+                    </td>
+                   }
+               </tr>
+               <tr><td></td><td ></td><td colspan="3" style="padding:0px !important">
+                   <table style="border-style:groove;border-width:thick;border-width:0px;background-color:#659DBD !important"><tr>
+                   @if (Model.Urgency_of_Response == 5 && Model.Level_of_Consequences == 5)
+                   {
+                    <td>
+                        <input class="btnHighlight" type="button" id="matrix55" value="Status"  />  
+                    </td>
+                   }
+                   else
+                   {
+                       <td style = "border-right-color: rgb(221, 221, 221); border-right-style: solid;" >
+                           <input type="button" id="matrix55" value="Status"  />  
+                        </td >
+                   }
+                   @if (Model.Urgency_of_Response == 4 && Model.Level_of_Consequences == 4)
+                   {
+                       <td>
+                           <input class="btnHighlight" type="button" id="matrix44" value="Log" />  
+                        </td>
+                   }
+                   else
+                   {
+                    <td>
+                        <input type="button" id="matrix44" value="Log" />  
+                    </td>
+                   }
+                </tr></table></td></tr>
+            </table>
+        </td>
+       
+    </tr>
+    <tr>
+        <td class="TDChange"><h4 style="line-height:0.5 !important">Design Basis Comment</h4></td>
+        <td class="TDChange" style="text-align:left">
+           
+                @Html.TextAreaFor(m => m.Design_Basis_Comment,10,150,null)
+            
+           
+        </td>
+       
+    </tr>
+    <tr>
+        <td class="TDChange"><h4 style="line-height:0.5 !important">Design Document Ref</h4></td>
+        <td class="TDChange" style="text-align:left !important;">
+            <input style="width:300px"  id="Design_Document_Reference"  name="Design_Document_Reference" value="@Model.Design_Document_Reference" readonly="readonly"/>
+        </td>
+      
+    </tr>
+      
+
+    </table>
+   
+</div>
+  

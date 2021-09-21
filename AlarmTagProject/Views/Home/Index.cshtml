@@ -1,0 +1,816 @@
+﻿@{
+    ViewBag.Title = "Book Out";
+}
+<style>
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+   position: absolute;
+  left: 50%;
+  top: 300px;
+}
+
+@@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+<script type="text/javascript">
+    var PageCount = '1';
+    function updateAlarmData(PageCount) {
+        var objSiteVal = $("#ddlSite option:selected").val();
+        var site ='';
+        if (objSiteVal != "")
+        {
+            site=$("#ddlSite option:selected").text();
+        }
+        var objStatusVal = $("#ddlStatus option:selected").val();
+        var status = '';
+        if (objStatusVal != "") {
+            status = $("#ddlStatus option:selected").text();
+        }
+
+        var objTagStatusVal = $("#ddlTagStatus option:selected").val();
+        var tagStatus = '';
+        if (objTagStatusVal != "") {
+            tagStatus = $("#ddlTagStatus option:selected").text();
+        }
+
+        var criteriaVal = $("#ddlCriteria option:selected").val();
+       
+
+         var searchterm = document.getElementById("txtSearch").value;
+        $.ajax({
+            url: '/Home/AlarmTableData',
+            type: 'POST',
+            data: { PageNum: PageCount, Site: site, Status: status, TagStatus: tagStatus, SearchTerm: searchterm, CriteriaVal: criteriaVal },
+            success: function (grid) {
+               $('#AlarmData').html(grid);
+                checkOnPaging();
+                $('#pleaseWaitDialog').modal('hide');
+            }            ,
+            error: function () {
+                $('#pleaseWaitDialog').modal('hide');
+                alert("An error has occured while processing your request. Please try again.");
+            }
+        });
+      };
+    function GetDataForSearch()
+    {
+        $('#pleaseWaitDialog').modal('show');
+        //calling the Search data. Here 1 is the default 1st page.
+        updateAlarmData('1');
+       
+    }
+    function GetDataForPage(ID) {
+        $('#pleaseWaitDialog').modal('show');
+        //calling the paging data
+       
+        updateAlarmData(ID.innerText);
+       
+    }
+    // Displaying Alarm tag details page
+    // AssTagname is the associated tag name
+    //AlarmType is the Alarm type
+    //Site is the site of the alarm tag
+    function LoadTagDetails(AssTagname,AlarmType,Site)
+    {
+        $.ajax({
+            url: '/Home/AlarmDetailsData',
+            type: 'POST',
+            data: { Tagname: AssTagname, AlarmType: AlarmType, Site: Site },
+            success: function (grid) {
+
+                $('#AlarmBody').html(grid);
+                var txtAssTag = $('#AlarmBody').find('input[id=Associated_Tagname]');
+                var ddlTagstatus = $('#AlarmBody').find('select[id=Development_Status]');
+                $('#AlarmHeader').text('Alarm Master - ' + txtAssTag.val() + '(' + ddlTagstatus.val() + ')');
+                $('#AlarmModal').modal('show');
+            },
+            error: function () {
+                $('#pleaseWaitDialog').modal('hide');
+                alert("An error has occured while processing your request. Please try again.");
+            }
+        });
+      
+    }
+    //Check box checked change event: add/remove the selected items to the book out (right panel)
+    function TagCheckedChange(chkbox)
+    {
+       
+        var ID = chkbox.id;
+        var Columns = chkbox.parentNode.parentNode.getElementsByTagName('td');
+        var tag = Columns[1].innerText;
+        var type = Columns[2].innerText;
+        var site = Columns[3].innerText;
+        
+        if ($(chkbox).is(":checked")) {
+            $('#' + chkbox.id).closest('tr').children('td,th').css('background-color', '#b8d1f3');
+            AddTagToBookOut(ID,tag, type, site);
+            $('#SelectedIDs').val($('#SelectedIDs').val() + ',' + ID + '|');
+        }
+        else
+        {
+            $('#' + chkbox.id).closest('tr').children('td,th').css('background-color', 'transparent');
+            $('#tblBookOutTags').find('tr').each(function () {
+                var $tds = $(this).find('td');
+                 if (ID == $tds.eq(0).find('input').val()) {
+                     $(this).remove();
+                     var str = $('#SelectedIDs').val();
+                     var res = str.replace(',' + ID + '|', "");
+                     $('#SelectedIDs').val(res);
+                     $('#totalSelected').text(parseInt($('#totalSelected').text()) - 1);
+                    return false;
+                }
+                                  
+            });
+           
+        }
+    }
+    function AddTagToBookOut(ID,tag, type, site) {
+        if ($('#tblBookOutTags tr:last').length == 0) {
+           
+            $('#totalSelected').text(parseInt($('#totalSelected').text())+1);
+            $('#tblBookOutTags').append('<tr><td><input type="hidden" value="'+ID+'" />' + tag + '</td><td>' + type + '</td><td>' + site + '</td><td width="18"><img id="'+ID+'"  src="/Content/closebutton.png" onclick="RemoveTag($(this));" width="20px" height="20px" /></td></tr>');
+        } else {
+            var added = false;
+            $('#tblBookOutTags').find('tr').each(function () {
+                var $tds = $(this).find('td');
+                if (ID == $tds.eq(0).find('input').val()) {
+                    added = true;
+                    return false;
+                }
+
+            });
+            if (added == false) {
+                $('#totalSelected').text(parseInt($('#totalSelected').text())+1);
+                $('#tblBookOutTags tr:last').after('<tr><td><input type="hidden" value="' + ID + '" />' + tag + '</td><td>' + type + '</td><td>' + site + '</td><td  width="18"><img id="' + ID + '"  src="/Content/closebutton.png" onclick="RemoveTag($(this));" width="20px" height="20px" /></td></tr>');
+            }
+        }
+    }
+    // uncheck the check box when clicking on x button
+    function RemoveTag(closeId)
+    {
+       
+        var str = $('#SelectedIDs').val();
+        var res = str.replace(',' + closeId[0].id + '|', "");
+        $('#SelectedIDs').val(res);
+        closeId.closest('tr').remove();
+        $('#MasterDataTable').find('tr').each(function () {
+            var $tds = $(this).find('td');
+            if ($(this).find('input:checkbox').length != 0) {
+                if (closeId[0].id == $(this).find('input:checkbox')[0].id) {
+                    $(this).find('input:checkbox').prop('checked', false);
+                    
+                    $(this).children('td,th').css('background-color', 'transparent');
+                    $('#checkAll').prop('checked', false);
+                    $('#totalSelected').text(parseInt($('#totalSelected').text()) - 1);
+                    return false;
+
+                }
+            }
+
+        });
+
+    }
+    function SelectAllCheckBoxes(Chkbox)
+    {
+        $('#pleaseWaitDialog').modal('show');
+        var firstrow = 0;
+        if ($(Chkbox).is(":checked")) {
+              $('#MasterDataTable').find('tr').each(function () {
+                if (firstrow != 1) {
+                    var $tds = $(this).find('td');
+                    if ($tds.eq(0).find('input:checkbox').length != 0) {
+                        if (!($tds.eq(0).find('input:checkbox').is(':disabled'))) {
+                            var ID = $tds.eq(0).find('input:checkbox')[0].id;
+                            if ($tds.eq(3).text() != "") {
+                                AddTagToBookOut(ID, $tds.eq(1).text(), $tds.eq(2).text(), $tds.eq(3).text());
+                                $('#SelectedIDs').val($('#SelectedIDs').val() + ',' + ID + '|');
+                            }
+                            $(this).children('td,th').css('background-color', '#b8d1f3');
+                            $(this).find('input:checkbox').prop('checked', true);
+                        }
+                    }
+                }
+                else { firstrow = 0;}
+
+            });
+        }
+        else {
+            $('#MasterDataTable').find('tr').each(function () {
+                if (firstrow != 1) {
+                    var $tds = $(this).find('td');
+                    if ($tds.eq(0).find('input:checkbox').length != 0) {
+                        var ID = $tds.eq(0).find('input:checkbox')[0].id;
+                        $('#tblBookOutTags').find('tr').each(function () {
+                            var $tds = $(this).find('td');
+                            if (ID == $tds.eq(0).find('input')[0].value) {
+                                $(this).remove();
+                                var str = $('#SelectedIDs').val();
+                                var res = str.replace(',' + ID + '|', "");
+                                $('#SelectedIDs').val(res);
+                                $('#totalSelected').text(parseInt($('#totalSelected').text()) - 1);
+                                return false;
+                            }
+
+                        });
+                        $(this).children('td,th').css('background-color', 'transparent');
+                        $(this).find('input:checkbox').prop('checked', false);
+                    }
+                }
+                else { firstrow = 0; }
+
+            });
+            
+        }
+        $('#pleaseWaitDialog').modal('hide');
+    }
+
+    function ShowPreviousTenPageNumbers() {
+      
+        var id = $('#hiddenInputPageIndex').val();
+        var idPageRange = $('#hiddenInputPageRange').val();
+        var Firstpage = $('#hiddenInputFisrtPage').val();
+        var LastPage = $('#hiddenInputlastpage').val();
+        var TotalPages = $('#hiddenInputTotalPagesCount').val();
+        var Firstpage = parseInt(Firstpage) - idPageRange;
+        var LastPage = parseInt(Firstpage)-1;
+        var pagecount = parseInt(Firstpage);
+        $('#hiddenInputFisrtPage').val(pagecount);
+        if (pagecount == 1)
+        {
+            $('#showFisrtPage').css('display', 'none');
+            $('#showPrevious').css('display', 'none');
+        }
+        for (var i = 1; i <= idPageRange; i++) {
+            var j = i - 1;
+            if (pagecount <= parseInt(TotalPages)) {
+                $('#lipage' + j).css('display', 'block');
+                $('#linkpage' + j).text(parseInt(LastPage) + i);
+                $('#linkpage' + j).css('background-color', '#fff');
+                if (parseInt(id) == parseInt(LastPage) + i) {
+                    $('#linkpage' + j).css('background-color', '#D2691E');
+                }
+                $('#hiddenInputlastpage').val(parseInt(parseInt(LastPage) + i));
+                $('#showLastPage').css('display', 'block');
+                $('#showNext').css('display', 'block');
+                pagecount = parseInt(pagecount + 1);
+            }
+            
+        }
+    }
+
+    function ShowNextTenPageNumbers() {
+               
+       
+        var id = $('#hiddenInputPageIndex').val();
+        var idPageRange = $('#hiddenInputPageRange').val();
+        var Firstpage = $('#hiddenInputFisrtPage').val();
+        var LastPage = $('#hiddenInputlastpage').val();
+        var TotalPages = $('#hiddenInputTotalPagesCount').val();
+        var pagecount = parseInt(LastPage)+1;
+        
+        for (var i = 1; i <= idPageRange; i++)
+        {
+            var j = i - 1;
+            if (pagecount<=parseInt(TotalPages)) {
+                $('#lipage' + j).css('display', 'block');
+                $('#linkpage' + j).text(parseInt(LastPage)+i);
+                $('#linkpage' + j).css('background-color', '#fff');
+                if (parseInt(id) == parseInt(LastPage)+i) {
+                    $('#linkpage' + j).css('background-color', '#D2691E');
+                }
+                $('#hiddenInputFisrtPage').val(parseInt(parseInt(Firstpage) + i));
+                
+                $('#hiddenInputlastpage').val(parseInt(parseInt(LastPage) + i));
+                $('#showFisrtPage').css('display', 'block');
+                $('#showPrevious').css('display', 'block');
+                pagecount = parseInt(pagecount + 1);
+            }
+            else
+            {
+                $('#lipage' + j).css('display', 'none');
+                $('#showNext').css('display', 'none');
+                $('#showLastPage').css('display', 'none');
+            }
+           
+        }
+       
+
+    }
+    function ShowFirstPage()
+    {
+        var id = $('#hiddenInputPageIndex').val();
+        var idPageRange = $('#hiddenInputPageRange').val();
+        var Firstpage = $('#hiddenInputFisrtPage').val();
+        var LastPage = $('#hiddenInputlastpage').val();
+        var TotalPages = $('#hiddenInputTotalPagesCount').val();
+         Firstpage = 1;
+        LastPage = 0;
+        var pagecount = parseInt(Firstpage);
+        $('#hiddenInputFisrtPage').val(Firstpage);
+        $('#showFisrtPage').css('display', 'none');
+        $('#showPrevious').css('display', 'none');
+        $('#showNext').css('display', 'block');
+        $('#showLastPage').css('display', 'block');
+        for (var i = 1; i <= idPageRange; i++) {
+            var j = i - 1;
+            if (pagecount <= parseInt(TotalPages)) {
+                $('#lipage' + j).css('display', 'block');
+                $('#linkpage' + j).text(parseInt(LastPage) + i);
+                $('#linkpage' + j).css('background-color', '#fff');
+                if (parseInt(id) == parseInt(LastPage) + i) {
+                    $('#linkpage' + j).css('background-color', '#D2691E');
+                }
+                $('#hiddenInputlastpage').val(pagecount);
+                
+                pagecount = parseInt(pagecount + 1);
+            }
+            
+        }
+    }
+    function ShowLastPage()
+    {
+       
+        var id = $('#hiddenInputPageIndex').val();
+        var idPageRange = $('#hiddenInputPageRange').val();
+        var Firstpage = $('#hiddenInputFisrtPage').val();
+        var LastPage = $('#hiddenInputlastpage').val();
+        var TotalPages = $('#hiddenInputTotalPagesCount').val();
+        var PageNum = TotalPages;
+        var Firstandlast = GetFirstLastpageNum(PageNum);
+        Firstpage = Firstandlast[0];
+        LastPage = Firstandlast[0]-1;
+        var pagecount = parseInt(Firstpage);
+        $('#hiddenInputFisrtPage').val(Firstpage);
+        $('#showFisrtPage').css('display', 'block');
+        $('#showPrevious').css('display', 'block');
+        $('#showNext').css('display', 'none');
+        $('#showLastPage').css('display', 'none');
+        for (var i = 1; i <= idPageRange; i++) {
+            var j = i - 1;
+            if (pagecount <= parseInt(TotalPages)) {
+                $('#lipage' + j).css('display', 'block');
+                $('#linkpage' + j).text(parseInt(LastPage) + i);
+                $('#linkpage' + j).css('background-color', '#fff');
+                if (parseInt(id) == parseInt(LastPage) + i) {
+                    $('#linkpage' + j).css('background-color', '#D2691E');
+                }
+                $('#hiddenInputlastpage').val(parseInt(parseInt(LastPage) + i));
+                
+                pagecount = parseInt(pagecount + 1);
+            }
+            else {
+                $('#lipage' + j).css('display', 'none');
+                }
+           
+        }
+    }
+    function GetFirstLastpageNum(PageNum)
+    {
+        var Firstpage = 0;
+        var LastPage = 0;
+        if (PageNum.substring(PageNum.length - 1) == "1") {
+            Firstpage = parseInt(PageNum);
+            LastPage = parseInt(PageNum) + 9;
+        }
+        else if (PageNum.substring(PageNum.length - 1) == "2") {
+            Firstpage = parseInt(PageNum) - 1;
+            LastPage = parseInt(PageNum) + 8;
+        }
+        else if (PageNum.substring(PageNum.length - 1) == "3") {
+            Firstpage = parseInt(PageNum) - 2;
+            LastPage = parseInt(PageNum) + 7;
+        }
+        else if (PageNum.substring(PageNum.length - 1) == "4") {
+            Firstpage = parseInt(PageNum) - 3;
+            LastPage = parseInt(PageNum) + 6;
+        }
+        else if (PageNum.substring(PageNum.length - 1) == "5") {
+            Firstpage = parseInt(PageNum) - 4;
+            LastPage = parseInt(PageNum) + 5;
+        }
+        else if (PageNum.substring(PageNum.length - 1) == "6") {
+            Firstpage = parseInt(PageNum) - 5;
+            LastPage = parseInt(PageNum) + 4;
+        }
+        else if (PageNum.substring(PageNum.length - 1) == "7") {
+            Firstpage = parseInt(PageNum) - 6;
+            LastPage = parseInt(PageNum) + 3;
+        }
+        else if (PageNum.substring(PageNum.length - 1) == "8") {
+            Firstpage = parseInt(PageNum) - 7;
+            LastPage = parseInt(PageNum) + 2;
+        }
+        else if (PageNum.substring(PageNum.length - 1) == "9") {
+            Firstpage = parseInt(PageNum) - 8;
+            LastPage = parseInt(PageNum) + 1;
+
+        }
+        else if (PageNum.substring(PageNum.length - 1) == "0") {
+            Firstpage = parseInt(PageNum) - 9;
+            LastPage = parseInt(PageNum);
+        }
+        return [Firstpage, LastPage];
+    }
+    function checkOnPaging() {
+      
+        if ($('#tblBookOutTags').find('tr').length > 0) {
+            var alarmTagID = $('#SelectedIDs').val();
+            var firstrow = 0;
+            
+            $('#MasterDataTable').find('tr').each(function () {
+                if (firstrow != 1) {
+                    var $tds = $(this).find('td');
+
+                    if ($tds.eq(0).find('input:checkbox').length != 0) {
+                        var ID = $tds.eq(0).find('input:checkbox')[0].id;
+                       
+                        if (alarmTagID.indexOf(',' + ID + '|') != -1) {
+                            $(this).find('input:checkbox').prop('checked', true);
+                            $(this).children('td,th').css('background-color', '#b8d1f3');
+                        }
+                    }
+                }
+                else { firstrow = 0; }
+
+            });
+            
+        }
+
+    }
+    function BookoutProcess() {
+        var valid = true;
+        var txtProject = $('#txtProject').val();
+        var txtRequester = $('#txtRequester').val();
+        if (txtProject == '') {
+            $('#txtProject').css('border-color', 'red');
+            $('#txtProject').css('border-width', '3px');
+            alert('Please enter Project#/FCA#');
+            valid = false;
+        }
+        if (txtRequester == '') {
+            $('#txtRequester').css('border-color', 'red');
+            $('#txtRequester').css('border-width', '3px');
+            if (valid == true) {
+                alert('Please enter Requester.');
+            }
+            valid = false;
+        }
+        if (valid == true) {
+            $('#pleaseWaitDialog').modal('show');
+
+
+            var alarmTagIDs = [];
+
+            $('#tblBookOutTags').find('tr').each(function () {
+                var $btags = $(this).find('td');
+                var TagID = $btags.eq(0).find('input')[0].value;
+
+                alarmTagIDs.push(TagID);
+
+            });
+            if (alarmTagIDs.length == 0) {
+                $('#pleaseWaitDialog').modal('hide');
+                alert('Please select at least one Booked In Tag.');
+            }
+            else {
+                $.ajax({
+                    url: '/Home/BookOutprocess',
+                    type: 'POST',
+                    data: { ProjectFCANumber: txtProject, Requestor: txtRequester, Status: status, AlarmTagIDs: alarmTagIDs },
+                    success: function (data) {
+                        $('#pleaseWaitDialog').modal('hide');
+                        if (data.indexOf('Error') != -1) {
+                            alert(data);
+                        }
+                        else {
+                            window.location.href = data;
+                        }
+                       
+                        ClearAll();
+                        $('#AlarmData').html('');
+                    },
+                    error: function () {
+                        $('#pleaseWaitDialog').modal('hide');
+                        alert("An error has occured while processing your request. Please try again.");
+                    }
+                });
+            }
+        }
+    }
+    function ClearAll() {
+        $('#tblBookOutTags').find('tr').each(function () {
+            $(this).remove();
+        });
+        var firstrow = 0;
+        $('#MasterDataTable').find('tr').each(function () {
+            if (firstrow != 1) {
+                var $tds = $(this).find('td');
+
+                if ($tds.eq(0).find('input:checkbox').length != 0) {
+                    $(this).children('td,th').css('background-color', 'transparent');
+                        $(this).find('input:checkbox').prop('checked', false);
+                    
+                }
+            }
+            else { firstrow = 0; }
+
+        });
+        $('#checkAll').prop('checked', false);
+        $('#totalSelected').text(0);
+        $('#SelectedIDs').val('');
+        $('#txtProject').val('');
+        $('#txtRequester').val('');
+    }
+   
+    function ExportReport() {
+
+        //call search and then export.
+        GetDataForSearch();
+
+        $('#pleaseWaitDialog').modal('show');
+
+
+        var objSiteVal = $("#ddlSite option:selected").val();
+        var site = '';
+        if (objSiteVal != "") {
+            site = $("#ddlSite option:selected").text();
+        }
+        var objStatusVal = $("#ddlStatus option:selected").val();
+        var status = '';
+        if (objStatusVal != "") {
+            status = $("#ddlStatus option:selected").text();
+        }
+        //var searchterm = $("#txtSearch").val();
+
+        var objTagStatusVal = $("#ddlTagStatus option:selected").val();
+        var tagStatus = '';
+        if (objTagStatusVal != "") {
+            tagStatus = $("#ddlTagStatus option:selected").text();
+        }
+
+        var criteriaVal = $("#ddlCriteria option:selected").val();
+        var searchterm = document.getElementById("txtSearch").value;
+
+        $.ajax({
+            url: '/Home/ExportReport',
+            type: 'POST',
+            data: { Site: site, Status: status, TagStatus: tagStatus, SearchTerm: searchterm, CriteriaVal: criteriaVal },
+            success: function (data) {
+                $('#pleaseWaitDialog').modal('hide');
+                if (data.indexOf('Error') != -1) {
+                    alert(data);
+                }
+                else {
+                    window.location.href = data;
+                }
+            }
+        });
+    }
+
+    function FilledData(txtbox) {
+        $(txtbox).css('border-color', 'transparent');
+        $(txtbox).css('border-width', '0px');
+    }
+
+   
+    function DeleteAlarmTag() {
+        var alarmTagID = $('#AlarmTagID').val();
+
+        if (confirm('This will delete the record permanently, Do you want to continue ? ')) {
+            //Delete record on click of OK
+            $.ajax({
+                url: '/Home/AlarmTagDataDelete',
+                type: 'POST',
+                data: { AlarmTagID: alarmTagID },
+                success: function (response) {
+                    if (response.indexOf('Error') != -1) {
+                        alert(response);
+                    }
+                    else {
+                        var msg = 'Deleted the record permanently.';
+                        alert(msg);
+
+                        $("#AlarmModal .close").click();
+
+                        //GetDataForSearch();
+                        
+                        var pageNumber = $('#hiddenInputPageIndex').val();
+                        $('#pleaseWaitDialog').modal('show');
+                        //GetDataForPage(pageNumber);
+                        updateAlarmData(pageNumber);
+                    }
+                }
+            });
+
+
+        }
+        else { //Do nothing
+        }
+
+
+
+    }
+
+    function SetUrgencyConsequence(btnID, Urgency, Consequence) {
+        var uID = $('#Urgency_of_Response').val();
+        var cID = $('#Level_of_Consequences').val();
+
+        var prevBtnID = '#matrix' + uID + cID;
+        $(prevBtnID).css('background-color', 'white');
+
+
+        $('#Urgency_of_Response').val(Urgency);
+        $('#Level_of_Consequences').val(Consequence);
+
+        $(btnID).css('background-color', 'lightpink');
+
+        if (Urgency == 1 && Consequence == 1) {
+            $("#ddlAlarmPrority").find('option:selected').removeAttr("selected");
+            $("#ddlAlarmPrority").find("option:contains(Priority 1)").attr('selected', 'selected');
+            $("#Alarm_Priority").val('Priority 1');
+
+        }
+        else if (Urgency == 1 && Consequence == 2) {
+            $("#ddlAlarmPrority").find('option:selected').removeAttr("selected");
+            $("#ddlAlarmPrority").find("option:contains(Priority 2)").attr('selected', 'selected');
+            $("#Alarm_Priority").val('Priority 2');
+        }
+        else if (Urgency == 1 && Consequence == 3) {
+            $("#ddlAlarmPrority").find('option:selected').removeAttr("selected");
+            $("#ddlAlarmPrority").find("option:contains(Priority 2)").attr('selected', 'selected');
+            $("#Alarm_Priority").val('Priority 2');
+        }
+        else if (Urgency == 2 && Consequence == 1) {
+            $("#ddlAlarmPrority").find('option:selected').removeAttr("selected");
+            $("#ddlAlarmPrority").find("option:contains(Priority 1)").attr('selected', 'selected');
+            $("#Alarm_Priority").val('Priority 1');
+        }
+        else if (Urgency == 2 && Consequence == 2) {
+            $("#ddlAlarmPrority").find('option:selected').removeAttr("selected");
+            $("#ddlAlarmPrority").find("option:contains(Priority 2)").attr('selected', 'selected');
+            $("#Alarm_Priority").val('Priority 2');
+        }
+        else if (Urgency == 2 && Consequence == 3) {
+            $("#ddlAlarmPrority").find('option:selected').removeAttr("selected");
+            $("#ddlAlarmPrority").find("option:contains(Priority 3)").attr('selected', 'selected');
+            $("#Alarm_Priority").val('Priority 3');
+        }
+        else if (Urgency == 3 && Consequence == 1) {
+            $("#ddlAlarmPrority").find('option:selected').removeAttr("selected");
+            $("#ddlAlarmPrority").find("option:contains(Priority 2)").attr('selected', 'selected');
+            $("#Alarm_Priority").val('Priority 2');
+        }
+        else if (Urgency == 3 && Consequence == 2) {
+            $("#ddlAlarmPrority").find('option:selected').removeAttr("selected");
+            $("#ddlAlarmPrority").find("option:contains(Priority 2)").attr('selected', 'selected');
+            $("#Alarm_Priority").val('Priority 2');
+        }
+        else if (Urgency == 3 && Consequence == 3) {
+            $("#ddlAlarmPrority").find('option:selected').removeAttr("selected");
+            $("#ddlAlarmPrority").find("option:contains(Priority 3)").attr('selected', 'selected');
+            $("#Alarm_Priority").val('Priority 3');
+        }
+        else if (Urgency == 4 && Consequence == 4) {
+            $("#ddlAlarmPrority").find('option:selected').removeAttr("selected");
+            $("#ddlAlarmPrority").find("option:contains(Log)").attr('selected', 'selected');
+            $("#Alarm_Priority").val('Log');
+        }
+        else if (Urgency == 5 && Consequence == 5) {
+            $("#ddlAlarmPrority").find('option:selected').removeAttr("selected");
+            $("#ddlAlarmPrority").find("option:contains(Status)").attr('selected', 'selected');
+            $("#Alarm_Priority").val('Status');
+        }
+
+
+    }
+</script>
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery-1.7.1.min.js")
+    @Scripts.Render("~/Scripts/jquery-ui-1.8.20.min.js")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#ddlSite").change(function () {
+                //$("#ddlStatus").val("170");
+                var siteText = $("#ddlSite option:selected").text();
+                if (siteText == "All") {
+                    
+                    $("#ddlStatus").find("option:contains(All)").attr('selected', 'selected');
+                    $("#ddlTagStatus").find("option:contains(All)").attr('selected', 'selected');
+                   
+                }
+                else {
+                   
+                   $("#ddlStatus").find("option:contains(Booked In)").attr('selected', 'selected');
+                   $("#ddlTagStatus").find("option:contains(Active)").attr('selected', 'selected');
+
+                }                
+            });
+        });
+       
+</script>
+}
+<div class="row" style="font-size:12px;">
+    @if(ViewBag.ExceptionMsg !="")
+    {
+        <span style="color:red;font-size:15px;">@ViewBag.ExceptionMsg</span>
+    }
+    <table border="1" >
+        <tr style="vertical-align:top;padding:0px !important">
+            <td>
+            <table class="table" style="background-color:rgba(77, 143, 189, 0.35);font-size: 14px; margin-bottom: 0px !important;"><tr ><td style="font-weight:bold">Site</td><td>
+                @Html.DropDownList("ddlSite", new SelectList((System.Collections.IEnumerable)ViewData["SitesList"], "FieldDataID", "Value"),"All","")
+                <td  style="font-weight:bold">Status</td><td>
+               @Html.DropDownList("ddlStatus", new SelectList((System.Collections.IEnumerable)ViewData["StatusList"], "FieldDataID", "Value"),"All","")
+                </td>
+                
+                <td style="font-weight:bold;">Tag Status</td>
+                <td>
+                    @Html.DropDownList("ddlTagStatus", new SelectList((System.Collections.IEnumerable)ViewData["TagStatusList"], "FieldDataID", "Value"), "All", "")
+                </td>
+                <td><button type="button" value="Load" onclick="ExportReport();">Export</button></td></tr>
+                <tr style="vertical-align:top;padding:0px !important"><td style="font-weight:bold;">Search Field:</td>
+                <td>
+                    @*@Html.DropDownList("ddlTagStatus", new SelectList((System.Collections.IEnumerable)ViewData["TagStatusList"], "FieldDataID", "Value"), "All", "")*@
+
+                    @Html.DropDownList("ddlCriteria", new List<SelectListItem>
+                    {
+                        new SelectListItem { Text = "Associated Tag Name", Value = "1", Selected = true },
+                        new SelectListItem { Text = "Description", Value = "2" },
+                        new SelectListItem { Text = "Design Basis Comment", Value = "3" },
+                        new SelectListItem { Text = "Alarm Type", Value = "4" }
+                    })
+
+
+
+                </td>
+                <td style="font-weight:bold">Search</td>
+                    <td colspan="3">
+                        <input type="text" id="txtSearch" name="txtSearch" style="width:500px;max-width:500px !important" />
+                    </td>
+   <td> <button type="button" onclick="GetDataForSearch();" value="Search">Search</button></td>
+    @*<img style="position:relative;top:-1px;" src="~/Content/search-button.png" onclick="GetDataForSearch();" width="20px" height="20px" />*@
+</tr>
+                </table>
+
+
+                <div id="AlarmData">
+                    <div style="width:800px;height:600px;vertical-align:central">
+
+                    </div>
+                </div>
+                </td><td>
+                <div>
+                    <table class="table" style="font-size:14px;" >
+                        <tr style="background-color: rgba(247, 182, 0, 0.4);">
+                        <td  style="font-weight:bold">Project#/FCA#</td><td  style="white-space: nowrap;">
+                            <input type="text" id="txtProject" tabindex="101" onchange="FilledData(this);" maxlength="20" /><span>
+                            <b style="color:red;position:inherit;margin-left:5px;">*</b></span>
+                              </td>
+                        <td rowspan="2"><button id="btnBookOut"  tabindex="103" style="width:70px; height:79px"  onclick="BookoutProcess();">Book<br />Out</button></td>
+                        </tr>
+                        <tr style="background-color:rgba(247, 182, 0, 0.4);"><td  style="font-weight:bold">Requester</td>
+                        <td style="white-space: nowrap;">
+                            <input type="text" id="txtRequester"  tabindex="102"  onchange="FilledData(this);" maxlength="50"  /><span>
+                            <b style="color:red;position:inherit;margin-left:5px;">*</b></span></td></tr>
+                        <tr><td colspan="2">Total Selected: <span id="totalSelected">0</span></td>
+                        <td><button id="ClearAll" style="font-size: 12px;" onclick="ClearAll();">Clear All</button></td></tr>
+                        <tr >
+                            <td colspan="4">
+                                <div style="height:500px;overflow-y:auto;">
+                                    <table id="tblBookOutTags" class="table"></table>
+                                    </div>
+</td>
+                        </tr>
+                        
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="modal fade" id="pleaseWaitDialog" data-backdrop="static"  role="dialog" data-keyboard="false">
+    <div class="modal-dialog">
+
+        <div class="modal-body">
+            <div class="loader"></div>
+        </div>
+        </div>
+    </div>
+<input type="hidden" id="SelectedIDs" />
